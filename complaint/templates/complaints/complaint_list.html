@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Complaint List</title>
+</head>
+<body>
+
+<h2>All Complaints</h2>
+
+<table border="1">
+
+    <tr>
+        <th>Name</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Date</th>
+    </tr>
+
+    {% for complaint in complaints %}
+
+    <tr>
+
+        <td>{{ complaint.name }}</td>
+
+        <td>{{ complaint.title }}</td>
+
+        <td>{{ complaint.status }}</td>
+
+        <td>{{ complaint.created_at }}</td>
+
+    </tr>
+
+    {% empty %}
+
+    <tr>
+        <td colspan="4">
+            No complaints found.
+        </td>
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+<br>
+
+<a href="{% url 'home' %}">
+    Home
+</a>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Complaint</title>
+</head>
+<body>
+
+<h2>Register Complaint</h2>
+
+<form method="POST" enctype="multipart/form-data">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Submit Complaint
+    </button>
+
+</form>
+
+<br>
+
+<a href="{% url 'home' %}">
+    Home
+</a>
+
+</body>
+</html>
