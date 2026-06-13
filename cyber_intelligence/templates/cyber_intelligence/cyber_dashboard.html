@@ -1,0 +1,836 @@
+{% extends "users/base.html" %}
+{% block title %}Cyber Threat Intelligence Hub{% endblock %}
+
+{% block extra_css %}
+    <!-- Outfit Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #121824;
+            --bg-card: rgba(26, 34, 50, 0.7);
+            --border-glow: rgba(0, 242, 254, 0.15);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+        }
+
+        .dashboard-body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            padding: 40px 0 20px 0;
+            background: radial-gradient(circle at top right, rgba(79, 172, 254, 0.08), transparent 40%),
+                        radial-gradient(circle at top left, rgba(0, 242, 254, 0.08), transparent 40%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            margin-bottom: 30px;
+        }
+
+        .title-gradient {
+            background: linear-gradient(135deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success-color);
+            color: var(--success-color);
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+        }
+
+        .status-badge .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.8s infinite;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            border-color: var(--border-glow);
+            box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .card-header-custom {
+            padding: 20px 20px 10px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header-title i {
+            color: var(--accent-cyan);
+        }
+
+        .card-body-custom {
+            padding: 20px;
+        }
+
+        /* Scanner Styling */
+        .scanner-input-group {
+            position: relative;
+            background: rgba(10, 14, 23, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .scanner-input-group:focus-within {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .scanner-input {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 12px 15px;
+            flex-grow: 1;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .scanner-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .scanner-btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .scanner-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* Live scan results animation */
+        #scan-result-container {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(10, 14, 23, 0.4);
+            border-left: 4px solid var(--accent-cyan);
+            animation: fadeIn 0.4s ease;
+        }
+
+        /* News styling */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .news-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .news-source {
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            background: rgba(0, 242, 254, 0.07);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            font-weight: 500;
+        }
+
+        .news-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .news-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.4;
+            margin: 12px 0 8px 0;
+            color: #ffffff;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .news-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Tables */
+        .custom-table {
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+
+        .custom-table th {
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+            background-color: transparent;
+            padding: 12px 15px;
+        }
+
+        .custom-table td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            background-color: transparent;
+            padding: 14px 15px;
+            vertical-align: middle;
+        }
+
+        /* Badge severities */
+        .badge-severity {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-critical {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .badge-high {
+            background-color: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+            border: 1px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .badge-medium {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning-color);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .badge-low {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Threat advisories */
+        .advisory-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: background 0.2s ease;
+        }
+
+        .advisory-item:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .advisory-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Risk score indicator circles */
+        .risk-gauge-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .risk-gauge {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(var(--danger-color) calc(var(--score) * 1%), rgba(255,255,255,0.08) 0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .risk-gauge::before {
+            content: "";
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #1a2232;
+            position: absolute;
+        }
+
+        .risk-value {
+            position: relative;
+            z-index: 2;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        /* Container Centering Override for Tailwind */
+        .container {
+            width: 100%;
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 1.5rem;
+            padding-left: 1.5rem;
+            max-width: 1280px;
+        }
+
+        /* Override Tailwind Forms stylesheet reset on search input */
+        .scanner-input {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            --tw-ring-color: transparent !important;
+            --tw-ring-offset-width: 0px !important;
+            --tw-ring-offset-color: transparent !important;
+        }
+        .scanner-input:focus {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            outline: none !important;
+            --tw-ring-color: transparent !important;
+        }
+    </style>
+{% endblock %}
+
+{% block main_container %}
+<div class="dashboard-body">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="status-badge mb-3">
+                        <span class="dot"></span> LIVE THREAT INTELLIGENCE SYNCED
+                    </div>
+                    <h1 class="display-5 title-gradient">Cyber Threat Intelligence Hub</h1>
+                    <p class="text-muted mb-0">
+                        Real-time monitoring, malicious domain detection, vulnerability databases, and active cybersecurity advisories.
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <span class="text-muted text-sm">System Time: </span>
+                    <span class="badge bg-secondary py-2 px-3 fw-bold" id="live-time">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        
+        <!-- Module 3: Website Scan Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Live Phishing & Malicious URL Scanner
+                        </div>
+                        <span class="badge bg-primary">PhishTank & URLhaus & VT</span>
+                    </div>
+                    <div class="card-body-custom">
+                        <p class="text-muted">
+                            Inspect any URL in real-time. The system runs structural heuristics, and crosses checks against PhishTank, abuse.ch URLhaus, and VirusTotal reputation databases.
+                        </p>
+                        
+                        <form id="url-scan-form">
+                            {% csrf_token %}
+                            <div class="scanner-input-group">
+                                <i class="fa-solid fa-link text-muted ms-3"></i>
+                                <input type="text" id="target-url" name="url" class="scanner-input" placeholder="Enter URL to analyze (e.g., paypaI-security-verify.com)..." required>
+                                <button type="submit" class="scanner-btn" id="scan-submit-btn">
+                                    <span id="btn-text">Analyze URL</span>
+                                    <span id="btn-spinner" class="spinner-border spinner-border-sm text-dark d-none" role="status"></span>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Scan Results (AJAX) -->
+                        <div id="scan-result-container">
+                            <div class="d-flex justify-content-between align-items-start flex-wrap">
+                                <div>
+                                    <h4 id="result-title" class="fw-bold mb-1">SCAN COMPLETED</h4>
+                                    <p id="result-url" class="text-muted break-word text-sm"></p>
+                                </div>
+                                
+                                <div class="risk-gauge-container">
+                                    <div id="risk-gauge-element" class="risk-gauge" style="--score: 0;">
+                                        <span class="risk-value" id="result-score">0%</span>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm text-muted">RISK SCORE</div>
+                                        <h5 class="fw-bold m-0" id="result-verdict">SAFE</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr style="border-top: 1px solid rgba(255,255,255,0.05); margin: 15px 0;">
+
+                            <div class="row text-sm">
+                                <div class="col-md-6 mb-2">
+                                    <strong class="text-muted">Detections / Sources:</strong>
+                                    <p id="result-sources" class="mt-1 mb-0">-</p>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <strong class="text-muted">Structural Flags Raised:</strong>
+                                    <p id="result-reasons" class="mt-1 mb-0 text-warning">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Dashboard Columns -->
+        <div class="row g-4 mb-5">
+            
+            <!-- Left Column: News Aggregator (Module 1) -->
+            <div class="col-lg-8">
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-newspaper"></i> Cyber Security News Aggregator
+                        </div>
+                        <span class="news-source">Latest Updates</span>
+                    </div>
+                    <div class="card-body-custom">
+                        {% if news_page %}
+                            <div class="row g-3">
+                                {% for article in news_page %}
+                                    <div class="col-md-6">
+                                        <div class="glass-card p-3 news-card h-100" style="background: rgba(255,255,255,0.02)">
+                                            <div>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="news-source">{{ article.source }}</span>
+                                                    <span class="news-date">{{ article.published_date|date:"M d, Y" }}</span>
+                                                </div>
+                                                <h5 class="news-title">
+                                                    <a href="{{ article.article_url }}" target="_blank" class="text-decoration-none text-white hover-cyan">
+                                                        {{ article.title }}
+                                                    </a>
+                                                </h5>
+                                                {% if article.description %}
+                                                    <p class="news-desc">{{ article.description }}</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="mt-2">
+                                                <a href="{{ article.article_url }}" target="_blank" class="btn btn-outline-info btn-sm w-100">
+                                                    Read Full Article <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- News Pagination -->
+                            {% if news_page.has_other_pages %}
+                            <div class="d-flex justify-content-center align-items-center gap-3 mt-4">
+                                {% if news_page.has_previous %}
+                                    <a href="?page={{ news_page.previous_page_number }}" class="btn btn-sm btn-outline-info text-decoration-none">
+                                        &laquo; Previous
+                                    </a>
+                                {% endif %}
+                                
+                                <span class="text-sm text-muted">
+                                    Page {{ news_page.number }} of {{ news_page.paginator.num_pages }}
+                                </span>
+                                
+                                {% if news_page.has_next %}
+                                    <a href="?page={{ news_page.next_page_number }}" class="btn btn-sm btn-outline-info text-decoration-none">
+                                        Next &raquo;
+                                    </a>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+
+                        {% else %}
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa-solid fa-rss-feed fa-3x mb-3 text-secondary"></i>
+                                <p>No news articles found in the intelligence cache.</p>
+                                <p class="text-sm">Run <code>python manage.py fetch_intelligence</code> to populate the database.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Threat Stats & Recent Scanner Queries -->
+            <div class="col-lg-4 d-flex flex-column gap-4">
+                
+                <!-- Threat Stats Card -->
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-chart-simple text-info"></i> Threat Intelligence Metrics
+                        </div>
+                    </div>
+                    <div class="card-body-custom">
+                        <div class="row g-2">
+                            <div class="col-6 mb-2">
+                                <div class="p-3 rounded text-center" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05)">
+                                    <div class="text-xs text-muted" style="font-size: 0.75rem;">TOTAL SCANS</div>
+                                    <div class="h3 fw-bold mt-1 text-info m-0">{{ stats.total_scans }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <div class="p-3 rounded text-center" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05)">
+                                    <div class="text-xs text-muted" style="font-size: 0.75rem;">PHISHING</div>
+                                    <div class="h3 fw-bold mt-1 text-danger m-0">{{ stats.phishing_scans }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded text-center" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05)">
+                                    <div class="text-xs text-muted" style="font-size: 0.75rem;">CISA ALERTS</div>
+                                    <div class="h3 fw-bold mt-1 text-warning m-0">{{ stats.cisa_count }}</div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 rounded text-center" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05)">
+                                    <div class="text-xs text-muted" style="font-size: 0.75rem;">CVE TRACKED</div>
+                                    <div class="h3 fw-bold mt-1 text-primary m-0">{{ stats.cve_count }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Scanning History -->
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-history"></i> Recent Scanner Queries
+                        </div>
+                    </div>
+                    <div class="card-body-custom p-0" style="max-height: 300px; overflow-y: auto;">
+                        {% if recent_scans %}
+                            <div class="list-group list-group-flush bg-transparent">
+                                {% for scan in recent_scans %}
+                                    <div class="list-group-item bg-transparent text-white border-0 border-bottom border-secondary p-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="text-truncate" style="max-width: 180px;" title="{{ scan.url }}">{{ scan.url }}</span>
+                                            <span class="badge {% if scan.result == 'SAFE' %}bg-success{% elif scan.result == 'SUSPICIOUS' %}bg-warning{% else %}bg-danger{% endif %}">
+                                                {{ scan.result }}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-1 text-sm text-muted">
+                                            <span>Risk Score: {{ scan.risk_score }}%</span>
+                                            <small>{{ scan.scanned_at|date:"M d, H:i" }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-4 text-muted">
+                                <p>No scan history yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Module 2: CISA Cybersecurity Advisories Table Section -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-shield-halved text-warning"></i> CISA Cybersecurity Advisories
+                        </div>
+                        <span class="badge bg-warning text-dark fw-bold">Active Advisories</span>
+                    </div>
+                    <div class="card-body-custom p-0">
+                        <div class="table-responsive">
+                            <table class="table custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Source</th>
+                                        <th>Published Date</th>
+                                        <th>Synced Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if threat_alerts %}
+                                        {% for alert in threat_alerts %}
+                                            <tr>
+                                                <td class="fw-bold">
+                                                    <a href="{{ alert.article_url }}" target="_blank" class="text-info text-decoration-none hover-cyan">
+                                                        {{ alert.title }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-danger text-sm" style="font-size: 0.75rem; font-weight: 600;">{{ alert.source }}</span>
+                                                </td>
+                                                <td class="text-muted">{{ alert.formatted_published_date }}</td>
+                                                <td class="text-muted">{{ alert.formatted_created_at }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="4" class="text-center py-5 text-muted">
+                                                No CISA Advisories found in the database. Please run CTI data sync command.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 5: Recent CVE Vulnerabilities Table -->
+        <div class="row">
+            <div class="col-12">
+                <div class="glass-card">
+                    <div class="card-header-custom">
+                        <div class="card-header-title">
+                            <i class="fa-solid fa-bug-slash"></i> Recent CVE Vulnerabilities (NIST NVD Feed)
+                        </div>
+                        <span class="badge bg-secondary">Updated Regularly</span>
+                    </div>
+                    <div class="card-body-custom p-0">
+                        <div class="table-responsive">
+                            <table class="table custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>CVE ID</th>
+                                        <th>Severity</th>
+                                        <th>Description</th>
+                                        <th>Published Date</th>
+                                        <th>Reference</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if vulnerabilities %}
+                                        {% for vuln in vulnerabilities %}
+                                            <tr>
+                                                <td class="fw-bold text-info">{{ vuln.cve_id }}</td>
+                                                <td>
+                                                    <span class="badge-severity 
+                                                        {% if vuln.severity == 'CRITICAL' or vuln.severity == 'HIGH' %}badge-critical
+                                                        {% elif vuln.severity == 'MEDIUM' %}badge-medium
+                                                        {% else %}badge-low{% endif %}">
+                                                        {{ vuln.severity }}
+                                                    </span>
+                                                </td>
+                                                <td class="text-muted text-sm" style="max-width: 450px;">
+                                                    {{ vuln.description|truncatewords:25 }}
+                                                </td>
+                                                <td>{{ vuln.published_date|date:"Y-m-d" }}</td>
+                                                <td>
+                                                    <a href="{{ vuln.reference_url }}" target="_blank" class="btn btn-sm btn-outline-secondary py-1">
+                                                        View Details <i class="fa-solid fa-arrow-up-right-from-square ms-1"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-5 text-muted">
+                                                No vulnerability CVE data found in database. Please run CTI task command to sync with NIST.
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <!-- AJAX Live Script -->
+    <script>
+        // Live Clock
+        function updateClock() {
+            const now = new Date();
+            const liveTimeElement = document.getElementById('live-time');
+            if (liveTimeElement) {
+                liveTimeElement.innerText = now.toUTCString();
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // URL Scanner Form Submission via AJAX
+        const scanForm = document.getElementById('url-scan-form');
+        if (scanForm) {
+            scanForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const urlInput = document.getElementById('target-url').value;
+                const submitBtn = document.getElementById('scan-submit-btn');
+                const btnText = document.getElementById('btn-text');
+                const btnSpinner = document.getElementById('btn-spinner');
+                const resultContainer = document.getElementById('scan-result-container');
+                
+                // Show spinner / loading state
+                submitBtn.disabled = true;
+                btnText.innerText = "Scanning URL...";
+                btnSpinner.classList.remove('d-none');
+                resultContainer.style.display = 'none';
+
+                const formData = new FormData(this);
+
+                fetch("{% url 'cyber_intelligence:url_scan_api' %}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw new Error(err.error || 'Server error'); });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Fill outputs
+                    document.getElementById('result-url').innerText = data.url;
+                    document.getElementById('result-score').innerText = data.risk_score + '%';
+                    document.getElementById('result-verdict').innerText = data.result;
+                    
+                    // Adjust risk colors and gauge UI
+                    const gauge = document.getElementById('risk-gauge-element');
+                    gauge.style.setProperty('--score', data.risk_score);
+                    
+                    let verdictColor = '#10b981'; // safe
+                    let borderStyle = '4px solid #10b981';
+                    
+                    if (data.result === 'PHISHING') {
+                        verdictColor = '#ef4444'; // danger
+                        borderStyle = '4px solid #ef4444';
+                    } else if (data.result === 'SUSPICIOUS') {
+                        verdictColor = '#f59e0b'; // warning
+                        borderStyle = '4px solid #f59e0b';
+                    }
+                    
+                    document.getElementById('result-verdict').style.color = verdictColor;
+                    resultContainer.style.borderLeft = borderStyle;
+                    
+                    // Sources and reasons
+                    document.getElementById('result-sources').innerText = data.sources || "None";
+                    
+                    const reasonsElement = document.getElementById('result-reasons');
+                    if (data.reasons && data.reasons.length > 0) {
+                        reasonsElement.innerText = data.reasons.join(', ');
+                        reasonsElement.className = "mt-1 mb-0 text-warning";
+                    } else {
+                        reasonsElement.innerText = "No structural anomaly detected.";
+                        reasonsElement.className = "mt-1 mb-0 text-muted";
+                    }
+                    
+                    // Show container
+                    resultContainer.style.display = 'block';
+                })
+                .catch(error => {
+                    alert("Scan failed: " + error.message);
+                })
+                .finally(() => {
+                    // Restore button
+                    submitBtn.disabled = false;
+                    btnText.innerText = "Analyze URL";
+                    btnSpinner.classList.add('d-none');
+                });
+            });
+        }
+    </script>
+{% endblock %}

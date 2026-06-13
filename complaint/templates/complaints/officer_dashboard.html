@@ -1,0 +1,258 @@
+{% extends "users/base.html" %}
+{% block title %}Officer Dashboard | CyberGuard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .glass-sidebar {
+        background: rgba(250, 248, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border-right: 1px solid #c3c6d7;
+    }
+    .active-nav-item {
+        background-color: #2563eb;
+        color: #ffffff;
+    }
+    .citizen-card {
+        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+    .form-control, select, textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #f3f3fe;
+        border: 1px solid #c3c6d7;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: all 0.2s;
+        color: #191b23;
+    }
+    .form-control:focus, select:focus, textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block main_container %}
+<div class="flex flex-1 min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 glass-sidebar hidden md:flex flex-col py-8 px-4 gap-2">
+        <div class="mb-8 px-4 text-label-caps text-on-surface-variant uppercase tracking-widest opacity-60 text-xs">Management</div>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item shadow-sm text-white no-underline" href="{% url 'officer' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body-base">Dashboard</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="{% url 'complaints' %}">
+            <span class="material-symbols-outlined">folder_managed</span>
+            <span class="font-body-base">My Cases</span>
+        </a>
+        <div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-2">
+            <div class="flex items-center gap-3 px-4 py-3">
+                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-fixed">
+                    <span class="material-symbols-outlined">account_circle</span>
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-on-surface">{{ user.first_name|default:user.username }}</p>
+                    <p class="text-xs text-on-surface-variant">L3 Investigator</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-1 overflow-y-auto bg-background p-margin-desktop text-on-surface">
+        <div class="max-w-6xl mx-auto">
+            <header class="flex justify-between items-end mb-12">
+                <div>
+                    <h1 class="font-display-lg text-display-lg text-on-surface">Officer Command</h1>
+                    <p class="text-on-surface-variant font-body-base">Reviewing critical incidents and managing multi-department response.</p>
+                </div>
+            </header>
+
+            <!-- Status Bento Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+                <div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+                    <p class="text-label-caps text-on-surface-variant mb-2 text-xs">Total Cases</p>
+                    <h3 class="text-headline-md font-headline-md text-primary">{{ stats.total_cases }}</h3>
+                    <div class="mt-4 flex items-center gap-1 text-secondary text-sm">
+                        <span class="material-symbols-outlined text-xs">trending_up</span>
+                        Active queue
+                    </div>
+                </div>
+                <div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+                    <p class="text-label-caps text-on-surface-variant mb-2 text-xs">High Severity</p>
+                    <h3 class="text-headline-md font-headline-md text-error">{{ stats.high_severity }}</h3>
+                    <div class="mt-4 flex items-center gap-1 text-error text-sm">
+                        <span class="material-symbols-outlined text-xs">warning</span>
+                        Requires investigation
+                    </div>
+                </div>
+                <div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+                    <p class="text-label-caps text-on-surface-variant mb-2 text-xs">Resolution Rate</p>
+                    <h3 class="text-headline-md font-headline-md text-secondary">{{ stats.resolution_rate }}%</h3>
+                    <div class="w-full bg-surface-container-highest h-1 rounded-full mt-6">
+                        <div class="bg-secondary h-1 rounded-full" style="width: {{ stats.resolution_rate }}%"></div>
+                    </div>
+                </div>
+                <div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+                    <p class="text-label-caps text-on-surface-variant mb-2 text-xs">Avg Response</p>
+                    <h3 class="text-headline-md font-headline-md text-tertiary">14m 20s</h3>
+                    <div class="mt-4 text-on-surface-variant text-sm">
+                        Real-time sync active
+                    </div>
+                </div>
+            </section>
+
+            <!-- Complaints Table -->
+            <section class="citizen-card bg-surface rounded-xl border border-outline-variant overflow-hidden">
+                <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                    <h2 class="font-headline-md text-on-surface">Active Complaints</h2>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                        <input id="searchCases" onkeyup="filterCases()" class="pl-10 pr-4 py-2 border border-outline-variant rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:outline-none transition-all w-64 text-on-surface" placeholder="Search case ID or citizen..." type="text"/>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left" id="casesTable">
+                        <thead>
+                            <tr class="bg-surface-container-lowest border-b border-outline-variant text-on-surface-variant text-xs font-bold">
+                                <th class="px-6 py-4 font-label-caps">Case ID</th>
+                                <th class="px-6 py-4 font-label-caps">Complaint Type</th>
+                                <th class="px-6 py-4 font-label-caps">Citizen</th>
+                                <th class="px-6 py-4 font-label-caps">Status</th>
+                                <th class="px-6 py-4 font-label-caps">Officer Assigned</th>
+                                <th class="px-6 py-4 font-label-caps text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant text-on-surface">
+                            {% for complaint in complaints %}
+                            <tr class="hover:bg-surface-container-lowest transition-colors case-row" data-id="CG-{{ complaint.id|stringformat:'04d' }}" data-citizen="{{ complaint.name }}">
+                                <td class="px-6 py-4 font-mono-data text-primary">#CG-{{ complaint.id|stringformat:"04d" }}</td>
+                                <td class="px-6 py-4 font-body-base font-bold">{{ complaint.title }}</td>
+                                <td class="px-6 py-4 font-body-base">{{ complaint.name }}</td>
+                                <td class="px-6 py-4">
+                                    {% if complaint.status == 'Submitted' %}
+                                        <span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold uppercase tracking-wider">Submitted</span>
+                                    {% elif complaint.status == 'Under Investigation' %}
+                                        <span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">Investigating</span>
+                                    {% elif complaint.status == 'Resolved' %}
+                                        <span class="px-3 py-1 rounded-full bg-success/10 text-success text-xs font-bold uppercase tracking-wider">Resolved</span>
+                                    {% else %}
+                                        <span class="px-3 py-1 rounded-full bg-error-container text-on-error-container text-xs font-bold uppercase tracking-wider">{{ complaint.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 font-body-base text-sm text-on-surface-variant">
+                                    {{ complaint.assigned_officer.name|default:"Unassigned" }}
+                                </td>
+                                <td class="px-6 py-4 text-right flex justify-end gap-2">
+                                    <button class="px-3 py-1.5 border border-primary text-primary rounded-lg text-sm font-bold hover:bg-primary/10 transition-all cursor-pointer bg-transparent" onclick="openModal('CG-{{ complaint.id|stringformat:"04d" }}', '{{ complaint.status }}', '{{ complaint.assigned_officer.id|default:"" }}')">Update Case</button>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">
+                                    No active complaints in database.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+
+<!-- Modal for Status Update -->
+<div class="hidden fixed inset-0 z-[60] overflow-y-auto items-center justify-center" id="statusModal">
+    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-surface rounded-xl max-w-lg w-full p-8 shadow-2xl border border-outline-variant z-10 text-on-surface">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-md text-on-surface">Update Case Status</h3>
+            <button class="text-on-surface-variant hover:text-on-surface border-0 bg-transparent cursor-pointer" onclick="closeModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form method="POST" class="flex flex-col gap-6">
+            {% csrf_token %}
+            <input id="modalCaseId" name="case_id" type="hidden"/>
+            <div class="flex flex-col gap-2">
+                <label class="font-label-caps text-on-surface-variant text-xs">Current Case</label>
+                <div class="px-4 py-3 bg-surface-container rounded-lg font-mono-data text-primary" id="displayCaseId">#CG-00000</div>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-label-caps text-on-surface-variant text-xs" for="status">New Status</label>
+                <select class="w-full border border-outline-variant rounded-lg px-4 py-3 bg-surface focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all text-on-surface" id="status" name="status">
+                    <option value="Submitted">Submitted</option>
+                    <option value="Under Investigation">Under Investigation</option>
+                    <option value="Resolved">Resolved</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-label-caps text-on-surface-variant text-xs" for="officer_id">Assign Officer</label>
+                <select class="w-full border border-outline-variant rounded-lg px-4 py-3 bg-surface focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all text-on-surface" id="officer_id" name="officer_id">
+                    <option value="">-- Unassigned --</option>
+                    {% for officer in officers %}
+                        <option value="{{ officer.id }}">{{ officer.name }} (Badge: {{ officer.badge_number }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-colors cursor-pointer bg-transparent" onclick="closeModal()" type="button">Cancel</button>
+                <button class="flex-1 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 shadow-lg transition-all cursor-pointer border-0" type="submit">Confirm Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openModal(caseId, status, officerId) {
+        document.getElementById('statusModal').classList.remove('hidden');
+        document.getElementById('statusModal').classList.add('flex');
+        document.getElementById('modalCaseId').value = caseId;
+        document.getElementById('displayCaseId').innerText = '#' + caseId;
+        
+        const statusSelect = document.getElementById('status');
+        if (status) {
+            statusSelect.value = status;
+        }
+        
+        const officerSelect = document.getElementById('officer_id');
+        if (officerId) {
+            officerSelect.value = officerId;
+        } else {
+            officerSelect.value = "";
+        }
+        
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        document.getElementById('statusModal').classList.add('hidden');
+        document.getElementById('statusModal').classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    function filterCases() {
+        const query = document.getElementById('searchCases').value.toLowerCase();
+        const rows = document.querySelectorAll('.case-row');
+        rows.forEach(row => {
+            const id = row.getAttribute('data-id').toLowerCase();
+            const citizen = row.getAttribute('data-citizen').toLowerCase();
+            if (id.includes(query) || citizen.includes(query)) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    }
+</script>
+{% endblock %}

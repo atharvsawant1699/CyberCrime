@@ -1,0 +1,257 @@
+{% extends "users/base.html" %}
+{% block title %}User Profile | CyberGuard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-control, input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #f3f3fe;
+        border: 1px solid #c3c6d7;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: all 0.2s;
+        color: #191b23;
+    }
+    .form-control:focus, input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus, textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block main_container %}
+<main class="pt-12 pb-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+        <!-- Sidebar: User Info -->
+        <aside class="md:col-span-4 space-y-8">
+            <div class="bg-surface-container-lowest rounded-xl p-8 border border-outline-variant shadow-sm text-center relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-primary"></div>
+                <div class="relative inline-block mb-6">
+                    {% if profile.profile_photo %}
+                        <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg mx-auto"/>
+                    {% else %}
+                        <div class="w-32 h-32 rounded-full bg-primary-container text-primary text-headline-md flex items-center justify-center font-bold border-4 border-white shadow-lg mx-auto">
+                            {{ user.username|slice:":2"|upper }}
+                        </div>
+                    {% endif %}
+                </div>
+                <h1 class="text-headline-md font-headline-md mb-1">{{ user.first_name }} {{ user.last_name }}</h1>
+                <p class="text-on-surface-variant mb-6">@{{ user.username }}</p>
+                <div class="space-y-4 text-left border-t border-outline-variant pt-6">
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-primary">mail</span>
+                        <span class="font-body-base">{{ user.email }}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-primary">phone</span>
+                        <span class="font-mono-data text-mono-data">{{ profile.phone_number|default:"Not provided" }}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-primary">calendar_today</span>
+                        <span class="font-body-base">Joined {{ user.date_joined|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-on-surface-variant">
+                        <span class="material-symbols-outlined text-primary">verified_user</span>
+                        <span class="font-body-base">Citizen Identity Verified</span>
+                    </div>
+                </div>
+                <div class="mt-8 grid grid-cols-1 gap-3">
+                    <button onclick="openEditModal()" class="w-full py-3 px-4 bg-primary text-on-primary font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all border-0 cursor-pointer">
+                        <span class="material-symbols-outlined">settings</span>
+                        Edit Profile
+                    </button>
+                    <a href="{% url 'password_reset' %}" class="w-full py-3 px-4 border border-primary text-primary font-bold rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-low transition-all no-underline">
+                        <span class="material-symbols-outlined">lock_reset</span>
+                        Change Password
+                    </a>
+                </div>
+            </div>
+            <!-- Security Widget -->
+            <div class="bg-primary-container rounded-xl p-6 text-on-primary-container shadow-sm border border-outline-variant/30">
+                <h3 class="font-bold flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined">shield</span>
+                    Account Security
+                </h3>
+                <div class="w-full bg-white/20 rounded-full h-2 mb-2">
+                    <div class="bg-primary h-2 rounded-full w-[85%]"></div>
+                </div>
+                <p class="text-label-caps font-label-caps opacity-90">Security Strength: Strong (85%)</p>
+            </div>
+        </aside>
+
+        <!-- Main Content: Case Dashboard -->
+        <div class="md:col-span-8 space-y-8">
+            <!-- Summary Bento Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="material-symbols-outlined p-2 bg-primary/10 text-primary rounded-lg">description</span>
+                        <span class="text-label-caps font-label-caps text-on-surface-variant">Total</span>
+                    </div>
+                    <p class="text-display-lg font-display-lg text-primary">{{ total_complaints }}</p>
+                    <p class="text-body-base text-on-surface-variant">Complaints Filed</p>
+                </div>
+                <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="material-symbols-outlined p-2 bg-success/10 text-success rounded-lg">check_circle</span>
+                        <span class="text-label-caps font-label-caps text-on-surface-variant">Resolved</span>
+                    </div>
+                    <p class="text-display-lg font-display-lg text-success">{{ resolved_complaints }}</p>
+                    <p class="text-body-base text-on-surface-variant">Resolved Cases</p>
+                </div>
+                <div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant shadow-sm">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="material-symbols-outlined p-2 bg-tertiary/10 text-tertiary rounded-lg">pending</span>
+                        <span class="text-label-caps font-label-caps text-on-surface-variant">Active</span>
+                    </div>
+                    <p class="text-display-lg font-display-lg text-tertiary">{{ pending_complaints }}</p>
+                    <p class="text-body-base text-on-surface-variant">Pending Cases</p>
+                </div>
+            </div>
+
+            <!-- Pending Cases Section -->
+            <section>
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-headline-md font-headline-md text-on-surface">Active cases</h2>
+                    <a class="text-primary hover:underline font-bold flex items-center gap-1 no-underline" href="{% url 'complaints' %}">
+                        View All <span class="material-symbols-outlined">chevron_right</span>
+                    </a>
+                </div>
+                <div class="space-y-4">
+                    {% for complaint in pending_list %}
+                    <div class="bg-white border border-outline-variant p-5 rounded-xl hover:shadow-md transition-all group cursor-pointer" onclick="location.href='{% url 'complaints' %}'">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="flex items-start gap-4">
+                                <div class="w-12 h-12 bg-tertiary/5 rounded-lg flex items-center justify-center text-tertiary">
+                                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-on-surface group-hover:text-primary transition-colors">{{ complaint.title }}</h4>
+                                    <p class="text-on-surface-variant text-sm">Ref ID: #CG-{{ complaint.id|stringformat:"04d" }} • Submitted {{ complaint.created_at|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-6">
+                                <div class="text-right hidden sm:block">
+                                    <div class="text-label-caps font-label-caps text-tertiary mb-1">Status</div>
+                                    <div class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed rounded-full text-xs font-bold">{{ complaint.status }}</div>
+                                </div>
+                                <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-8 text-center text-on-surface-variant bg-surface-container-lowest border border-outline-variant rounded-xl">
+                        No pending cases reported.
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Resolved Cases Section -->
+            <section>
+                <div class="flex items-center justify-between mb-6 pt-4">
+                    <h2 class="text-headline-md font-headline-md text-on-surface">Resolved cases</h2>
+                </div>
+                <div class="overflow-x-auto bg-white border border-outline-variant rounded-xl shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-surface-container-low border-b border-outline-variant">
+                                <th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">Case Reference</th>
+                                <th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">Category</th>
+                                <th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">Resolution Date</th>
+                                <th class="px-6 py-4 text-label-caps font-label-caps text-on-surface-variant">Outcome</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant text-on-surface">
+                            {% for complaint in resolved_list %}
+                            <tr class="hover:bg-surface-bright transition-colors cursor-pointer" onclick="location.href='{% url 'complaints' %}'">
+                                <td class="px-6 py-4 font-mono-data text-primary">#CG-{{ complaint.id|stringformat:"04d" }}</td>
+                                <td class="px-6 py-4 text-body-base">{{ complaint.category|title }}</td>
+                                <td class="px-6 py-4 text-on-surface-variant">{{ complaint.updated_at|date:"M d, Y" }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="text-success flex items-center gap-1 font-bold">
+                                        <span class="material-symbols-outlined text-[18px]">verified</span>
+                                        Resolved
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-on-surface-variant">
+                                    No resolved cases yet.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+<!-- Edit Profile Modal -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="editProfileModal">
+    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeEditModal()"></div>
+    <div class="relative w-full max-w-lg overflow-hidden bg-surface rounded-2xl shadow-2xl p-8 border border-outline-variant">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-md text-on-surface">Update Profile</h3>
+            <button class="p-2 hover:bg-surface-variant rounded-full transition-colors border-0 bg-transparent text-on-surface-variant" onclick="closeEditModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase mb-1">First Name</label>
+                    {{ u_form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface-variant uppercase mb-1">Last Name</label>
+                    {{ u_form.last_name }}
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-on-surface-variant uppercase mb-1">Email Address</label>
+                {{ u_form.email }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-on-surface-variant uppercase mb-1">Phone Number</label>
+                {{ p_form.phone_number }}
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-on-surface-variant uppercase mb-1">Profile Photo</label>
+                {{ p_form.profile_photo }}
+            </div>
+            <div class="pt-4 flex gap-3">
+                <button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-colors" onclick="closeEditModal()" type="button">Cancel</button>
+                <button class="flex-1 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 shadow-lg transition-all" type="submit">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function openEditModal() {
+        const modal = document.getElementById('editProfileModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeEditModal() {
+        const modal = document.getElementById('editProfileModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeEditModal();
+    });
+</script>
+{% endblock %}

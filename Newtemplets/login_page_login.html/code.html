@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | CyberGuard Portal</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#784b00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-container": "#996100",
+                        "secondary": "#006c49",
+                        "primary": "#004ac6",
+                        "surface-container-low": "#f3f3fe",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-dim": "#d9d9e5",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#e1e2ed",
+                        "surface-tint": "#0053db",
+                        "on-surface": "#191b23",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#faf8ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#2e3039",
+                        "outline": "#737686",
+                        "surface-container": "#ededf9",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-high": "#e7e7f3",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "secondary-fixed": "#6ffbbe",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#e1e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-background": "#191b23",
+                        "on-tertiary-fixed": "#2a1700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "display-lg-mobile": ["Outfit"],
+                        "mono-data": ["JetBrains Mono"],
+                        "body-base": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "mono-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .security-blur {
+            backdrop-filter: blur(12px);
+            background: rgba(250, 248, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Header / Top Navigation Shell (Simplified for Login Context) -->
+<nav class="h-16 flex items-center w-full px-margin-desktop max-w-container-max mx-auto border-b border-outline-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="shield">shield</span>
+<span class="text-headline-md font-headline-md text-primary">CyberGuard</span>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex items-center justify-center px-margin-mobile md:px-margin-desktop py-12 relative overflow-hidden">
+<!-- Background Atmospheric Element -->
+<div class="absolute inset-0 z-0 opacity-10 pointer-events-none">
+
+</div>
+<!-- Authentication Card -->
+<div class="z-10 w-full max-w-md">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.05)] p-8 md:p-10">
+<!-- Icon and Title -->
+<div class="flex flex-col items-center mb-8">
+<div class="w-16 h-16 bg-primary-fixed flex items-center justify-center rounded-full mb-4">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Portal Intelligence Login</h1>
+<p class="font-body-base text-body-base text-on-surface-variant text-center mt-2">
+                        Enter your credentials to access secure terminal.
+                    </p>
+</div>
+<!-- Login Form -->
+<form action="{% url 'login' %}" class="space-y-6" method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Username Field -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="id_username">Username / Identity Code</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="person">person</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_username" name="username" placeholder="CGRD-7721-X" required="" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-on-surface-variant" for="id_password">Access Password</label>
+<a class="font-label-caps text-label-caps text-primary hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative" x-data="{ show: false }">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="key">key</span>
+<input :type="show ? 'text' : 'password'" class="w-full pl-12 pr-12 py-3 bg-surface-container-low border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_password" name="password" placeholder="••••••••••••" required=""/>
+<button @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer" id="remember" name="remember" type="checkbox"/>
+<label class="font-body-base text-body-base text-on-surface-variant cursor-pointer select-none" for="remember">
+                            Stay authenticated for 30 days
+                        </label>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-headline-md text-body-base hover:bg-primary-container transition-all active:scale-[0.98] shadow-lg shadow-primary/10 flex items-center justify-center gap-2" type="submit">
+<span>Authorize Access</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Link -->
+<div class="mt-8 pt-6 border-t border-outline-variant text-center">
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        New personnel? <a class="text-primary font-bold hover:underline" href="#">Request Access</a>
+</p>
+</div>
+</div>
+<!-- Trust Badges -->
+<div class="mt-8 flex justify-center items-center gap-6 opacity-60">
+<div class="flex items-center gap-1.5 grayscale">
+<span class="material-symbols-outlined text-xl" data-icon="verified_user">verified_user</span>
+<span class="text-label-caps font-label-caps">256-BIT ENCRYPTION</span>
+</div>
+<div class="flex items-center gap-1.5 grayscale">
+<span class="material-symbols-outlined text-xl" data-icon="gpp_good">gpp_good</span>
+<span class="text-label-caps font-label-caps">SOC2 COMPLIANT</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-8 px-margin-desktop max-w-container-max mx-auto">
+<div class="mb-4 md:mb-0">
+<span class="text-label-caps font-label-caps text-on-surface uppercase tracking-widest">© 2024 CyberGuard Intelligence Core. All rights reserved.</span>
+</div>
+<div class="flex gap-6">
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+</div>
+</div>
+</footer>
+<!-- Alpine.js for lightweight interactions -->
+<script defer="" src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<!-- Image generation prompt for contextual relevance -->
+<!-- This login page uses an animated shader for background context, but if an image were used: 
+         data-alt="A futuristic and secure command center interface with glowing cyber-navy blue data streams and holographic shield icons. The scene is illuminated by soft, professional light-mode white reflections on glass surfaces, creating a feeling of unwavering protection and clinical precision. High-tech minimalist digital aesthetic with deep navy and vibrant security blue accents, conveying a sense of trusted authority and predictive defense."
+    -->
+</body></html>

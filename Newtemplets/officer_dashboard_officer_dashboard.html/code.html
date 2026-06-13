@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Officer Dashboard | CyberGuard Intelligence Core</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#784b00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-container": "#996100",
+                        "secondary": "#006c49",
+                        "primary": "#004ac6",
+                        "surface-container-low": "#f3f3fe",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-dim": "#d9d9e5",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#e1e2ed",
+                        "surface-tint": "#0053db",
+                        "on-surface": "#191b23",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#faf8ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#2e3039",
+                        "outline": "#737686",
+                        "surface-container": "#ededf9",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-high": "#e7e7f3",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "secondary-fixed": "#6ffbbe",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#e1e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-background": "#191b23",
+                        "on-tertiary-fixed": "#2a1700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "display-lg-mobile": ["Outfit"],
+                        "mono-data": ["JetBrains Mono"],
+                        "body-base": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "mono-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            background: rgba(250, 248, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid #c3c6d7;
+        }
+        .active-nav-item {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+        .citizen-card {
+            box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #faf8ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface sticky top-0 z-50 border-b border-outline-variant">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-16">
+<div class="text-headline-md font-headline-md text-primary">CyberGuard</div>
+<div class="hidden md:flex gap-8 items-center h-full">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Register Complaint</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Track Complaints</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Portal</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Threat Intelligence</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary font-bold px-4 py-2 hover:bg-surface-container-low transition-all duration-150">Login</button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold shadow-md hover:opacity-90 transition-all">Signup</button>
+</div>
+</nav>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="w-64 glass-sidebar hidden md:flex flex-col py-8 px-4 gap-2">
+<div class="mb-8 px-4 text-label-caps text-on-surface-variant uppercase tracking-widest opacity-60">Management</div>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item shadow-sm" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-base">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
+<span class="font-body-base">Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-base">Users</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-base">Reports</span>
+</a>
+<div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-base">Settings</span>
+</a>
+<div class="flex items-center gap-3 px-4 py-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-fixed">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Officer Sarah</p>
+<p class="text-xs text-on-surface-variant">L3 Investigator</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto bg-background p-margin-desktop">
+<div class="max-w-6xl mx-auto">
+<header class="flex justify-between items-end mb-12">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Officer Command</h1>
+<p class="text-on-surface-variant font-body-base">Reviewing critical incidents and managing multi-department response.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface border border-outline px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                            Filter
+                        </button>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-bold flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+                            New Incident
+                        </button>
+</div>
+</header>
+<!-- Status Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-12">
+<div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+<p class="text-label-caps text-on-surface-variant mb-2">Total Cases</p>
+<h3 class="text-headline-md font-headline-md text-primary">1,284</h3>
+<div class="mt-4 flex items-center gap-1 text-secondary text-sm">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+                            +12% this week
+                        </div>
+</div>
+<div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+<p class="text-label-caps text-on-surface-variant mb-2">High Severity</p>
+<h3 class="text-headline-md font-headline-md text-error">42</h3>
+<div class="mt-4 flex items-center gap-1 text-error text-sm">
+<span class="material-symbols-outlined text-xs" data-icon="warning">warning</span>
+                            Requires immediate action
+                        </div>
+</div>
+<div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+<p class="text-label-caps text-on-surface-variant mb-2">Resolution Rate</p>
+<h3 class="text-headline-md font-headline-md text-secondary">89.4%</h3>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-6">
+<div class="bg-secondary h-1 rounded-full w-[89.4%]"></div>
+</div>
+</div>
+<div class="citizen-card bg-surface p-6 rounded-xl border border-outline-variant">
+<p class="text-label-caps text-on-surface-variant mb-2">Avg Response</p>
+<h3 class="text-headline-md font-headline-md text-tertiary">14m 20s</h3>
+<div class="mt-4 text-on-surface-variant text-sm">
+                            Real-time sync active
+                        </div>
+</div>
+</section>
+<!-- Complaints Table -->
+<section class="citizen-card bg-surface rounded-xl border border-outline-variant overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<h2 class="font-headline-md text-on-surface">Active Complaints</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 border border-outline-variant rounded-lg bg-surface focus:ring-2 focus:ring-primary focus:outline-none transition-all w-64" placeholder="Search case ID or citizen..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant">
+<th class="px-6 py-4 font-label-caps text-on-surface-variant">Case ID</th>
+<th class="px-6 py-4 font-label-caps text-on-surface-variant">Complaint Type</th>
+<th class="px-6 py-4 font-label-caps text-on-surface-variant">Citizen</th>
+<th class="px-6 py-4 font-label-caps text-on-surface-variant">Status</th>
+<th class="px-6 py-4 font-label-caps text-on-surface-variant">Severity</th>
+<th class="px-6 py-4 font-label-caps text-on-surface-variant text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 font-mono-data text-primary">#CG-90210</td>
+<td class="px-6 py-4 font-body-base">Ransomware Infiltration</td>
+<td class="px-6 py-4 font-body-base">Johnathan Doe</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-error-container text-on-error-container text-xs font-bold uppercase tracking-wider">Critical</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</div>
+</td>
+<td class="px-6 py-4 text-right flex justify-end gap-2">
+<button class="px-3 py-1.5 border border-primary text-primary rounded-lg text-sm font-bold hover:bg-primary-container hover:text-on-primary-container transition-all" onclick="openModal('CG-90210')">Change Status</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-all">Assign</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 font-mono-data text-primary">#CG-90211</td>
+<td class="px-6 py-4 font-body-base">Phishing Campaign</td>
+<td class="px-6 py-4 font-body-base">Sarah Jenkins</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">Processing</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+</td>
+<td class="px-6 py-4 text-right flex justify-end gap-2">
+<button class="px-3 py-1.5 border border-primary text-primary rounded-lg text-sm font-bold hover:bg-primary-container hover:text-on-primary-container transition-all" onclick="openModal('CG-90211')">Change Status</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-all">Assign</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4 font-mono-data text-primary">#CG-90215</td>
+<td class="px-6 py-4 font-body-base">Identity Theft</td>
+<td class="px-6 py-4 font-body-base">Marcus Aurelius</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-bold uppercase tracking-wider">Under Review</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+<span class="w-2 h-2 rounded-full bg-outline-variant"></span>
+</div>
+</td>
+<td class="px-6 py-4 text-right flex justify-end gap-2">
+<button class="px-3 py-1.5 border border-primary text-primary rounded-lg text-sm font-bold hover:bg-primary-container hover:text-on-primary-container transition-all" onclick="openModal('CG-90215')">Change Status</button>
+<button class="px-3 py-1.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:opacity-90 transition-all">Assign</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</div>
+<!-- Modal for Status Update -->
+<div class="hidden fixed inset-0 z-[60] overflow-y-auto" id="statusModal">
+<div class="flex items-center justify-center min-h-screen px-4 py-8">
+<div class="fixed inset-0 bg-on-surface opacity-40 transition-opacity"></div>
+<div class="relative bg-surface rounded-xl max-w-lg w-full p-8 shadow-2xl border border-outline-variant animate-in fade-in zoom-in duration-200">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-md text-on-surface">Update Case Status</h3>
+<button class="text-on-surface-variant hover:text-on-surface" onclick="closeModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<form action="/update-status" class="flex flex-col gap-6" method="POST">
+<!-- CSRF Token Emulation -->
+<input name="csrf_token" type="hidden" value="abc123cyberguard456xyz"/>
+<input id="modalCaseId" name="case_id" type="hidden"/>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-on-surface-variant">Current Case</label>
+<div class="px-4 py-3 bg-surface-container rounded-lg font-mono-data text-primary" id="displayCaseId">#CG-00000</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-on-surface-variant" for="status">New Status</label>
+<select class="w-full border border-outline-variant rounded-lg px-4 py-3 bg-surface focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all" id="status" name="status">
+<option value="under_review">Under Review</option>
+<option value="processing">Processing</option>
+<option value="critical">Critical</option>
+<option value="resolved">Resolved</option>
+<option value="dismissed">Dismissed</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-on-surface-variant" for="remarks">Officer Remarks</label>
+<textarea class="w-full border border-outline-variant rounded-lg px-4 py-3 bg-surface focus:ring-4 focus:ring-primary/20 focus:outline-none transition-all" id="remarks" name="remarks" placeholder="Enter investigative summary..." rows="3"></textarea>
+</div>
+<div class="flex gap-4 pt-4">
+<button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-colors" onclick="closeModal()" type="button">Cancel</button>
+<button class="flex-1 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 shadow-lg shadow-primary/20 transition-all" type="submit">Confirm Update</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-8 px-margin-desktop max-w-container-max mx-auto">
+<div class="text-label-caps font-label-caps text-on-surface mb-4 md:mb-0">CyberGuard Intelligence Core</div>
+<div class="flex gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+</div>
+<div class="text-on-surface-variant text-sm mt-4 md:mt-0">
+                © 2024 CyberGuard Intelligence Core. All rights reserved.
+            </div>
+</div>
+</footer>
+<script>
+        function openModal(caseId) {
+            document.getElementById('statusModal').classList.remove('hidden');
+            document.getElementById('modalCaseId').value = caseId;
+            document.getElementById('displayCaseId').innerText = '#' + caseId;
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('statusModal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal on escape key
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body></html>

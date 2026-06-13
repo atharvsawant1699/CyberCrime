@@ -11,9 +11,15 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env
+load_dotenv(BASE_DIR / '.env')
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -39,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'complaint',
     'users',
+    'cyber_intelligence',
 ]
 
 MIDDLEWARE = [
@@ -120,3 +127,15 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+
+# For testing password reset emails in the console
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Cyber Threat Intelligence API Keys
+GNEWS_API_KEY = os.getenv('GNEWS_API_KEY', '')
+VIRUSTOTAL_API_KEY = os.getenv('VIRUSTOTAL_API_KEY', '')
+NVD_API_KEY = os.getenv('NVD_API_KEY', '')
+

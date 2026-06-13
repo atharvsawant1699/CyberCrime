@@ -1,52 +1,338 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Complaint List</title>
-</head>
-<body>
+{% extends "users/base.html" %}
+{% block title %}Track Complaints | CyberGuard{% endblock %}
 
-<h2>All Complaints</h2>
+{% block main_container %}
+<main class="max-w-container-max mx-auto px-margin-desktop py-12">
+    <!-- Page Header -->
+    <div class="mb-12">
+        <h1 class="font-display-lg text-display-lg text-on-surface mb-2">Complaint Status Center</h1>
+        <p class="text-on-surface-variant text-body-base max-w-2xl">Monitor your reported digital incidents. Our intelligence core processes every report with surgical precision to ensure your digital safety.</p>
+    </div>
 
-<table border="1">
+    <!-- Filters & Search -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8 bg-surface-container-lowest p-6 rounded-xl border border-outline-variant">
+        <div class="relative w-full md:w-96">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+            <input id="searchInput" onkeyup="filterComplaints()" class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-lg border-outline-variant focus:ring-2 focus:ring-primary focus:border-primary border transition-all text-on-surface" placeholder="Search by ID or Title..." type="text"/>
+        </div>
+        <div class="flex gap-3 w-full md:w-auto">
+            <select id="statusFilter" onchange="filterComplaints()" class="bg-surface rounded-lg border-outline-variant py-2 px-4 focus:ring-primary text-on-surface">
+                <option value="all">All Status</option>
+                <option value="Submitted">Submitted</option>
+                <option value="Under Investigation">Under Investigation</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+    </div>
 
-    <tr>
-        <th>Name</th>
-        <th>Title</th>
-        <th>Status</th>
-        <th>Date</th>
-    </tr>
+    <!-- Complaints Table -->
+    <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+        <table class="w-full text-left border-collapse" id="complaintsTable">
+            <thead>
+                <tr class="bg-surface-container-low border-b border-outline-variant">
+                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Complaint ID</th>
+                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Title</th>
+                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Category</th>
+                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Date Filed</th>
+                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Status</th>
+                    <th class="px-6 py-4 text-right"></th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant text-on-surface">
+                {% for complaint in complaints %}
+                <tr class="hover:bg-surface-container transition-colors cursor-pointer group complaint-row" 
+                    data-id="CG-{{ complaint.id|stringformat:'04d' }}"
+                    data-title="{{ complaint.title }}"
+                    data-status="{{ complaint.status }}"
+                    onclick="openModal('CG-{{ complaint.id|stringformat:"04d" }}', '{{ complaint.title|escapejs }}', '{{ complaint.description|escapejs }}', '{{ complaint.assigned_officer.name|default:"Unassigned" }}', '{{ complaint.category|title }}', '{{ complaint.status|escapejs }}', '{{ complaint.created_at|date:"M d, Y" }}', '{{ complaint.created_at|time:"h:i A" }}', '{% if complaint.evidence %}{{ complaint.evidence.url }}{% endif %}', '{% if complaint.evidence %}{{ complaint.evidence.name }}{% endif %}')">
+                    <td class="px-6 py-5 font-mono-data text-on-surface-variant">#CG-{{ complaint.id|stringformat:"04d" }}</td>
+                    <td class="px-6 py-5 font-bold text-on-surface">{{ complaint.title }}</td>
+                    <td class="px-6 py-5 text-on-surface-variant">{{ complaint.category|title }}</td>
+                    <td class="px-6 py-5 text-on-surface-variant">{{ complaint.created_at|date:"M d, Y" }}</td>
+                    <td class="px-6 py-5 status-cell" data-status-val="{{ complaint.status }}">
+                        {% if complaint.status == 'Submitted' %}
+                        <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                            Submitted
+                        </span>
+                        {% elif complaint.status == 'Under Investigation' %}
+                        <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                            Investigating
+                        </span>
+                        {% elif complaint.status == 'Resolved' %}
+                        <span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                            Resolved
+                        </span>
+                        {% else %}
+                        <span class="px-3 py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                            {{ complaint.status }}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-5 text-right">
+                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr id="emptyRow">
+                    <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant font-body-base">
+                        No complaints reported yet. <a href="{% url 'register' %}" class="text-primary hover:underline font-bold">Report an Incident</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
 
-    {% for complaint in complaints %}
+<!-- Detail Modal -->
+<div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="complaintModal">
+    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative w-full max-w-4xl max-h-[90vh] overflow-hidden bg-surface rounded-2xl shadow-2xl flex flex-col md:flex-row">
+        <!-- Left Side: Details -->
+        <div class="flex-1 p-8 overflow-y-auto">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <span class="font-mono-data text-primary font-bold text-sm" id="modalID">#CG-8821</span>
+                    <h2 class="font-headline-md text-headline-md text-on-surface mt-1" id="modalTitle">Unidentified Phishing Campaign</h2>
+                </div>
+                <button class="p-2 hover:bg-surface-variant rounded-full transition-colors border-0 bg-transparent text-on-surface-variant" onclick="closeModal()">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="space-y-6">
+                <div>
+                    <h4 class="text-label-caps font-label-caps text-on-surface-variant mb-2 uppercase">Description</h4>
+                    <p class="text-on-surface leading-relaxed text-body-base text-on-surface" id="modalDescription">System users reported receiving sophisticated emails impersonating the internal security portal.</p>
+                </div>
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="text-label-caps font-label-caps text-on-surface-variant mb-2 uppercase">Assigned Officer</h4>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-primary-fixed-dim flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">shield_person</span>
+                            </div>
+                            <div>
+                                <p class="font-bold text-on-surface text-sm" id="modalOfficer">Det. Sarah Chen</p>
+                                <p class="text-xs text-on-surface-variant">Cyber Crimes Division</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-label-caps font-label-caps text-on-surface-variant mb-2 uppercase">Category</h4>
+                        <p class="text-on-surface flex items-center gap-2 text-sm text-on-surface" id="modalCategory">
+                            <span class="material-symbols-outlined text-sm">social_distance</span>
+                            Social Engineering
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-label-caps font-label-caps text-on-surface-variant mb-3 uppercase">Digital Evidence</h4>
+                    <div class="grid grid-cols-3 gap-3" id="modalEvidenceContainer">
+                        <!-- Evidence Link injected dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Right Side: Timeline -->
+        <div class="w-full md:w-80 bg-surface-container-low border-l border-outline-variant p-8 overflow-y-auto">
+            <h4 class="text-label-caps font-label-caps text-on-surface-variant mb-8 uppercase tracking-widest text-xs">Case Timeline</h4>
+            <div class="relative text-on-surface">
+                <!-- Timeline Line -->
+                <div class="absolute left-[15px] top-0 bottom-0 w-0.5 bg-outline-variant"></div>
+                <div id="timelineSteps">
+                    <!-- Timeline steps injected dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-    <tr>
+{% block extra_js %}
+<script>
+    function openModal(id, title, description, officer, category, status, date, time, evidenceUrl, evidenceName) {
+        const modal = document.getElementById('complaintModal');
+        document.getElementById('modalID').innerText = '#' + id;
+        document.getElementById('modalTitle').innerText = title;
+        document.getElementById('modalDescription').innerText = description;
+        document.getElementById('modalOfficer').innerText = officer;
+        document.getElementById('modalCategory').innerText = category;
+        
+        const evidenceContainer = document.getElementById('modalEvidenceContainer');
+        if (evidenceUrl) {
+            evidenceContainer.innerHTML = `
+                <a href="${evidenceUrl}" target="_blank" class="aspect-square bg-surface-container rounded-lg border border-dashed border-outline-variant flex flex-col items-center justify-center text-center p-2 group hover:border-primary transition-colors cursor-pointer no-underline text-on-surface">
+                    <span class="material-symbols-outlined text-primary mb-1">attachment</span>
+                    <span class="text-[10px] font-bold text-on-surface-variant group-hover:text-primary truncate max-w-full px-2">${evidenceName}</span>
+                </a>
+            `;
+        } else {
+            evidenceContainer.innerHTML = `
+                <div class="col-span-3 text-sm text-on-surface-variant italic py-2">
+                    No digital evidence attached.
+                </div>
+            `;
+        }
 
-        <td>{{ complaint.name }}</td>
+        let timelineHtml = '';
+        
+        timelineHtml += `
+        <div class="relative flex gap-4 mb-8">
+            <div class="relative z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+            </div>
+            <div>
+                <p class="font-bold text-on-surface text-sm">Submitted</p>
+                <p class="text-xs text-on-surface-variant">${date} ${time}</p>
+            </div>
+        </div>
+        `;
+        
+        if (status === 'Submitted') {
+            timelineHtml += `
+            <div class="relative flex gap-4 mb-8">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+                    <span class="material-symbols-outlined text-sm">pending</span>
+                </div>
+                <div>
+                    <p class="font-bold text-outline text-sm">Reviewed</p>
+                    <p class="text-xs text-on-surface-variant">Awaiting triage</p>
+                </div>
+            </div>
+            `;
+        } else {
+            timelineHtml += `
+            <div class="relative flex gap-4 mb-8">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+                </div>
+                <div>
+                    <p class="font-bold text-on-surface text-sm">Reviewed</p>
+                    <p class="text-xs text-on-surface-variant">Triage Completed</p>
+                </div>
+            </div>
+            `;
+        }
+        
+        if (status === 'Submitted') {
+            timelineHtml += `
+            <div class="relative flex gap-4 mb-8">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+                </div>
+                <div>
+                    <p class="font-bold text-outline text-sm">Investigation</p>
+                    <p class="text-xs text-on-surface-variant">Pending triage</p>
+                </div>
+            </div>
+            `;
+        } else if (status === 'Under Investigation') {
+            timelineHtml += `
+            <div class="relative flex gap-4 mb-8">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-primary-container border-4 border-surface flex items-center justify-center">
+                    <div class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></div>
+                </div>
+                <div>
+                    <p class="font-bold text-primary text-sm">Investigation</p>
+                    <p class="text-xs text-on-surface-variant">In Progress</p>
+                    <p class="mt-2 text-xs p-2 bg-surface rounded italic text-on-surface-variant border border-outline-variant">Forensic trace analysis initiated.</p>
+                </div>
+            </div>
+            `;
+        } else {
+            timelineHtml += `
+            <div class="relative flex gap-4 mb-8">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check</span>
+                </div>
+                <div>
+                    <p class="font-bold text-on-surface text-sm">Investigation</p>
+                    <p class="text-xs text-on-surface-variant">Completed</p>
+                </div>
+            </div>
+            `;
+        }
+        
+        if (status === 'Resolved') {
+            timelineHtml += `
+            <div class="relative flex gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-success flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+                </div>
+                <div>
+                    <p class="font-bold text-success text-sm">Resolved</p>
+                    <p class="text-xs text-on-surface-variant">Mitigated & Closed</p>
+                </div>
+            </div>
+            `;
+        } else if (status === 'Rejected') {
+            timelineHtml += `
+            <div class="relative flex gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-error flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">cancel</span>
+                </div>
+                <div>
+                    <p class="font-bold text-error text-sm">Rejected</p>
+                    <p class="text-xs text-on-surface-variant">Case Dismissed / Rejected</p>
+                </div>
+            </div>
+            `;
+        } else {
+            timelineHtml += `
+            <div class="relative flex gap-4">
+                <div class="relative z-10 w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center">
+                    <div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+                </div>
+                <div>
+                    <p class="font-bold text-outline text-sm">Resolved</p>
+                    <p class="text-xs text-on-surface-variant">Pending Conclusion</p>
+                </div>
+            </div>
+            `;
+        }
+        
+        document.getElementById('timelineSteps').innerHTML = timelineHtml;
 
-        <td>{{ complaint.title }}</td>
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
 
-        <td>{{ complaint.status }}</td>
+    function closeModal() {
+        const modal = document.getElementById('complaintModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
 
-        <td>{{ complaint.created_at }}</td>
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
 
-    </tr>
+    function filterComplaints() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const status = document.getElementById('statusFilter').value;
+        const rows = document.querySelectorAll('.complaint-row');
 
-    {% empty %}
+        rows.forEach(row => {
+            const id = row.getAttribute('data-id').toLowerCase();
+            const title = row.getAttribute('data-title').toLowerCase();
+            const rowStatus = row.getAttribute('data-status');
+            
+            const matchesSearch = id.includes(query) || title.includes(query);
+            const matchesStatus = (status === 'all' || rowStatus === status);
 
-    <tr>
-        <td colspan="4">
-            No complaints found.
-        </td>
-    </tr>
-
-    {% endfor %}
-
-</table>
-
-<br>
-
-<a href="{% url 'home' %}">
-    Home
-</a>
-
-</body>
-</html>
+            if (matchesSearch && matchesStatus) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    }
+</script>
+{% endblock %}

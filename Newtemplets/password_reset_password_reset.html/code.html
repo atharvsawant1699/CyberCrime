@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reset Password | CyberGuard Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#784b00",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c3c6d7",
+                    "surface-bright": "#faf8ff",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-container": "#00714d",
+                    "tertiary-container": "#996100",
+                    "secondary": "#006c49",
+                    "primary": "#004ac6",
+                    "surface-container-low": "#f3f3fe",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "surface-dim": "#d9d9e5",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "on-primary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "tertiary-fixed": "#ffddb8",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed": "#002113",
+                    "on-primary-fixed": "#00174b",
+                    "surface-container-highest": "#e1e2ed",
+                    "surface-tint": "#0053db",
+                    "on-surface": "#191b23",
+                    "on-primary-container": "#eeefff",
+                    "surface": "#faf8ff",
+                    "on-surface-variant": "#434655",
+                    "inverse-primary": "#b4c5ff",
+                    "inverse-surface": "#2e3039",
+                    "outline": "#737686",
+                    "surface-container": "#ededf9",
+                    "secondary-fixed-dim": "#4edea3",
+                    "surface-container-high": "#e7e7f3",
+                    "on-error": "#ffffff",
+                    "inverse-on-surface": "#f0f0fb",
+                    "secondary-fixed": "#6ffbbe",
+                    "background": "#faf8ff",
+                    "on-tertiary-container": "#ffeedd",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#6cf8bb",
+                    "surface-variant": "#e1e2ed",
+                    "primary-fixed": "#dbe1ff",
+                    "on-secondary-fixed-variant": "#005236",
+                    "on-background": "#191b23",
+                    "on-tertiary-fixed": "#2a1700"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-desktop": "32px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Outfit"],
+                    "label-caps": ["Outfit"],
+                    "headline-md": ["Outfit"],
+                    "display-lg-mobile": ["Outfit"],
+                    "mono-data": ["JetBrains Mono"],
+                    "body-base": ["Outfit"]
+            },
+            "fontSize": {
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "mono-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Outfit', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Top Navigation Bar - Suppression Rule Applied: Only showing for core screens. 
+         However, for Portal Branding, we use a simplified Header without Nav Links -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop h-16 shrink-0">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="security">security</span>
+<span class="text-headline-md font-headline-md text-primary">CyberGuard</span>
+</div>
+<div class="flex items-center gap-4">
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Back to Login</a>
+</div>
+</header>
+<main class="grow flex items-center justify-center p-6 relative overflow-hidden">
+<!-- Atmospheric Background Element -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-20">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-primary-fixed-dim blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] rounded-full bg-secondary-fixed-dim blur-[100px]"></div>
+</div>
+<section class="w-full max-w-[480px] z-10">
+<!-- Authentication Card -->
+<div class="glass-card p-8 md:p-10 rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.05)] border border-outline-variant">
+<div class="mb-8">
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">Reset Password</h1>
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        Enter your registered email address and we'll send you a secure link to reset your password.
+                    </p>
+</div>
+<!-- Django-style Form -->
+<form action="/password_reset/" class="space-y-6" method="POST">
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant block px-1" for="email">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all font-body-base text-body-base text-on-surface" id="email" name="email" placeholder="name@company.com" required="" type="email"/>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full bg-primary text-on-primary font-headline-md text-body-base py-4 rounded-lg shadow-lg shadow-primary/20 hover:bg-primary-container transition-all flex items-center justify-center gap-2 group" type="submit">
+                            Send Reset Link
+                            <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+<div class="mt-8 pt-8 border-t border-outline-variant text-center">
+<p class="font-body-base text-body-base text-on-surface-variant">
+                        Having trouble? <a class="text-primary font-bold hover:underline" href="#">Contact Security Support</a>
+</p>
+</div>
+</div>
+<!-- Security Badge -->
+<div class="mt-6 flex items-center justify-center gap-3 text-outline">
+<span class="material-symbols-outlined" data-icon="encrypted">encrypted</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest">End-to-End Encryption Secured</span>
+</div>
+</section>
+</main>
+<!-- Footer - Shell Layout from JSON applied -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant shrink-0">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-8 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col items-center md:items-start gap-2 mb-6 md:mb-0">
+<span class="font-label-caps text-label-caps text-on-surface uppercase tracking-widest">CyberGuard Intelligence Core</span>
+<p class="font-body-base text-body-base text-on-surface-variant text-sm">© 2024 CyberGuard Intelligence Core. All rights reserved.</p>
+</div>
+<nav class="flex flex-wrap justify-center gap-6">
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Security Disclosure</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+</nav>
+</div>
+</footer>
+<!-- Image Prompts for Background/Atmosphere (Invisible in UI) -->
+<div class="hidden">
+<img data-alt="A futuristic, clean light-mode interface background featuring soft, organic blobs of Cyber Blue and Mint Green gradients blurred deeply in the background. The aesthetic is professional, minimalist, and high-tech, representing digital security and stability. Soft prismatic light refracts through translucent glass layers, creating a sense of premium depth and clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo65l8ebkvxNwxWW8kr_GWPouJc8K4kSgxSZaAwnLmZrdAqMj3bcTKwOd353VnM3hw_Il-25DUiTvBKYJSrXuw3b20ZYZkt_v2Zz3dcaUTEqEyH8ZifxLMOrRQ3Z9jT4ddfzOR1ZzqQ-pZisj0GN2PmiqxXLmosXQF8FOg5GRLrU-LNKoEtte1FNVfkBJlaYvRRsrieMijUmKJR2pX5z-r_Ti71VxIRyeJYjjkRSJwP9pxccpmktHO"/>
+</div>
+<script>
+        // Simple micro-interaction for the submit button
+        const form = document.querySelector('form');
+        const button = form.querySelector('button');
+        
+        form.addEventListener('submit', (e) => {
+            button.classList.add('opacity-80', 'scale-[0.98]');
+            button.innerHTML = `
+                <span class="material-symbols-outlined animate-spin" data-icon="progress_activity">progress_activity</span>
+                Processing...
+            `;
+        });
+    </script>
+</body></html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | CyberGuard Portal</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&amp;family=JetBrains+Mono:wght@400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#784b00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-container": "#996100",
+                        "secondary": "#006c49",
+                        "primary": "#004ac6",
+                        "surface-container-low": "#f3f3fe",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-dim": "#d9d9e5",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#e1e2ed",
+                        "surface-tint": "#0053db",
+                        "on-surface": "#191b23",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#faf8ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#2e3039",
+                        "outline": "#737686",
+                        "surface-container": "#ededf9",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-high": "#e7e7f3",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "secondary-fixed": "#6ffbbe",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#e1e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-background": "#191b23",
+                        "on-tertiary-fixed": "#2a1700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "display-lg-mobile": ["Outfit"],
+                        "mono-data": ["JetBrains Mono"],
+                        "body-base": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "700" }],
+                        "mono-data": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "body-base": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base min-h-screen flex flex-col">
+<!-- TopNavBar (Simulated Shell) -->
+<header class="bg-surface docked full-width top-0 border-b border-outline-variant">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-16">
+<div class="text-headline-md font-headline-md text-primary">CyberGuard</div>
+<div class="hidden md:flex gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Register Complaint</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Track Complaints</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Portal</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Threat Intelligence</a>
+</div>
+<div class="flex gap-4">
+<a class="text-primary font-bold px-4 py-2 rounded-lg hover:bg-surface-container-low transition-all" href="#">Login</a>
+</div>
+</nav>
+</header>
+<main class="flex-grow flex items-center justify-center py-16 px-margin-mobile md:px-margin-desktop relative overflow-hidden">
+<!-- Abstract Background Decoration -->
+<div class="absolute top-0 left-0 w-full h-full -z-10 opacity-30">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary/10 rounded-full blur-[100px]"></div>
+</div>
+<div class="w-full max-w-[1100px] grid md:grid-cols-2 shadow-xl rounded-2xl overflow-hidden bg-white">
+<!-- Left Side: Visual/Context -->
+<div class="hidden md:block relative bg-primary p-12 text-on-primary">
+<div class="absolute inset-0 opacity-20">
+<img alt="Cyber Security Visual" class="w-full h-full object-cover" data-alt="A sophisticated technological abstract background featuring glowing digital data streams and circuit patterns in a deep professional blue hue. The lighting is focused and cinematic, evoking a sense of high-security and advanced computational power. The composition is clean and modern, aligning with a trusted cybersecurity brand identity with crisp lines and subtle gradients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpFmOmyiPLgMmVLjUFVi88K-ZJI9884FwlXdQM2jqSLOQIWygey9NnQmsT1yhHkz800lkQFvjZiY79s9iFPxMvFAjuGJ1yot0LLIUO2hd33-TVJZnGYkA0BaiWchpVq8-EVyQ1AJetBvRrvUZT-zqzhKGESG1AtxlOK6e6qaELUgyMH-j4Pcr09WToRGbMTM5nNHLQclsFxhPNKbpVWjYDa6de2fbsBXhAZrwy-HYWnlf31o2kDnzL"/>
+</div>
+<div class="relative z-10 h-full flex flex-col justify-between">
+<div>
+<h1 class="font-display-lg text-display-lg mb-6">Join the Digital Shield.</h1>
+<p class="text-body-base opacity-90 leading-relaxed max-w-sm">
+                            Create your CyberGuard account to securely report incidents, track threat intelligence, and protect your digital assets with clinical precision.
+                        </p>
+</div>
+<div class="space-y-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined bg-white/10 p-2 rounded-lg" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-semibold">Encrypted Data Storage</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined bg-white/10 p-2 rounded-lg" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-semibold">Real-time Threat Alerts</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined bg-white/10 p-2 rounded-lg" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+<span class="font-semibold">24/7 Intelligence Support</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Registration Form -->
+<div class="p-8 md:p-12 bg-white flex flex-col justify-center">
+<div class="mb-8">
+<h2 class="text-headline-md font-headline-md text-on-surface">Create Portal Account</h2>
+<p class="text-on-surface-variant">Provide your details to register as a secure user.</p>
+</div>
+<form action="." class="space-y-6" method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 gap-6">
+<!-- Username -->
+<div class="relative">
+<label class="block text-sm font-semibold text-on-surface mb-2" for="username">Username</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">person</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="username" name="username" placeholder="johndoe_secure" required="" type="text"/>
+</div>
+</div>
+<!-- Email -->
+<div class="relative">
+<label class="block text-sm font-semibold text-on-surface mb-2" for="email">Email Address</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">mail</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="email" name="email" placeholder="john@organization.com" required="" type="email"/>
+</div>
+</div>
+<!-- Phone -->
+<div class="relative">
+<label class="block text-sm font-semibold text-on-surface mb-2" for="phone">Phone Number</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">call</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="phone" name="phone" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+</div>
+<!-- Password Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="relative">
+<label class="block text-sm font-semibold text-on-surface mb-2" for="password">Password</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">lock</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="password" name="password" oninput="checkPasswordStrength(this.value)" required="" type="password"/>
+</div>
+<!-- Strength Indicator -->
+<div class="mt-2 h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full w-0 transition-all duration-500 bg-error" id="strength-bar"></div>
+</div>
+<p class="text-[10px] mt-1 font-semibold uppercase tracking-wider text-outline" id="strength-text">Strength: Null</p>
+</div>
+<div class="relative">
+<label class="block text-sm font-semibold text-on-surface mb-2" for="confirm_password">Confirm Password</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">lock_reset</span>
+<input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" id="confirm_password" name="confirm_password" required="" type="password"/>
+</div>
+<p class="text-[10px] mt-1 font-semibold text-error hidden" id="match-error">Passwords do not match</p>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-3 py-2">
+<input class="mt-1 w-4 h-4 text-primary border-outline-variant rounded focus:ring-primary" id="terms" name="terms" required="" type="checkbox"/>
+<label class="text-sm text-on-surface-variant" for="terms">
+                            I agree to the <a class="text-primary hover:underline" href="#">Terms of Service</a> and <a class="text-primary hover:underline" href="#">Security Disclosure Policy</a>.
+                        </label>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-4 rounded-lg shadow-lg hover:shadow-primary/20 hover:opacity-90 active:scale-[0.98] transition-all duration-150" type="submit">
+                        Create Account
+                    </button>
+</form>
+<div class="mt-8 text-center">
+<p class="text-on-surface-variant">Already have an account? <a class="text-primary font-bold hover:underline" href="#">Sign In</a></p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (Simulated Shell) -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-8 px-margin-desktop max-w-container-max mx-auto">
+<div class="text-label-caps font-label-caps text-on-surface mb-4 md:mb-0">© 2024 CYBERGUARD INTELLIGENCE CORE</div>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Contact Support</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors text-sm" href="#">Security Disclosure</a>
+</div>
+</div>
+</footer>
+<script>
+        function checkPasswordStrength(password) {
+            const bar = document.getElementById('strength-bar');
+            const text = document.getElementById('strength-text');
+            
+            let strength = 0;
+            if (password.length > 7) strength += 20;
+            if (/[A-Z]/.test(password)) strength += 20;
+            if (/[a-z]/.test(password)) strength += 20;
+            if (/[0-9]/.test(password)) strength += 20;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 20;
+
+            bar.style.width = strength + '%';
+            
+            if (strength <= 40) {
+                bar.className = 'h-full transition-all duration-500 bg-error';
+                text.innerText = 'Strength: Weak';
+                text.className = 'text-[10px] mt-1 font-semibold uppercase tracking-wider text-error';
+            } else if (strength <= 80) {
+                bar.className = 'h-full transition-all duration-500 bg-tertiary';
+                text.innerText = 'Strength: Moderate';
+                text.className = 'text-[10px] mt-1 font-semibold uppercase tracking-wider text-tertiary';
+            } else {
+                bar.className = 'h-full transition-all duration-500 bg-secondary';
+                text.innerText = 'Strength: Secure';
+                text.className = 'text-[10px] mt-1 font-semibold uppercase tracking-wider text-secondary';
+            }
+        }
+
+        // Validation for matching passwords
+        const pass = document.getElementById('password');
+        const confirmPass = document.getElementById('confirm_password');
+        const errorMsg = document.getElementById('match-error');
+
+        function validatePassword() {
+            if (confirmPass.value && pass.value !== confirmPass.value) {
+                errorMsg.classList.remove('hidden');
+                confirmPass.classList.add('border-error');
+            } else {
+                errorMsg.classList.add('hidden');
+                confirmPass.classList.remove('border-error');
+            }
+        }
+
+        pass.addEventListener('change', validatePassword);
+        confirmPass.addEventListener('keyup', validatePassword);
+    </script>
+</body></html>
