@@ -1,5 +1,0 @@
-LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
-
-# For testing password reset emails in the console
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
