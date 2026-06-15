@@ -42,11 +42,11 @@
             <tbody class="divide-y divide-outline-variant text-on-surface">
                 {% for complaint in complaints %}
                 <tr class="hover:bg-surface-container transition-colors cursor-pointer group complaint-row" 
-                    data-id="CG-{{ complaint.id|stringformat:'04d' }}"
+                    data-id="{{ complaint.complaint_id }}"
                     data-title="{{ complaint.title }}"
                     data-status="{{ complaint.status }}"
-                    onclick="openModal('CG-{{ complaint.id|stringformat:"04d" }}', '{{ complaint.title|escapejs }}', '{{ complaint.description|escapejs }}', '{{ complaint.assigned_officer.name|default:"Unassigned" }}', '{{ complaint.category|title }}', '{{ complaint.status|escapejs }}', '{{ complaint.created_at|date:"M d, Y" }}', '{{ complaint.created_at|time:"h:i A" }}', '{% if complaint.evidence %}{{ complaint.evidence.url }}{% endif %}', '{% if complaint.evidence %}{{ complaint.evidence.name }}{% endif %}')">
-                    <td class="px-6 py-5 font-mono-data text-on-surface-variant">#CG-{{ complaint.id|stringformat:"04d" }}</td>
+                    onclick="window.location='{% url 'case_detail' complaint.complaint_id %}'">
+                    <td class="px-6 py-5 font-mono-data text-on-surface-variant">#{{ complaint.complaint_id }}</td>
                     <td class="px-6 py-5 font-bold text-on-surface">{{ complaint.title }}</td>
                     <td class="px-6 py-5 text-on-surface-variant">{{ complaint.category|title }}</td>
                     <td class="px-6 py-5 text-on-surface-variant">{{ complaint.created_at|date:"M d, Y" }}</td>

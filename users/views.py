@@ -49,7 +49,14 @@ def login_view(request):
                 messages.success(request, f"Access authorized. Welcome back, {username}!")
                 
                 # If officer, redirect to officer dashboard
-                if user.is_staff or user.groups.filter(name='Officers').exists():
+                from complaint.models import Officer
+                is_officer = (
+                    user.is_staff or 
+                    user.is_superuser or
+                    user.groups.filter(name='Officers').exists() or 
+                    Officer.objects.filter(email=user.email).exists()
+                )
+                if is_officer:
                     return redirect('officer')
                 return redirect('home')
             else:

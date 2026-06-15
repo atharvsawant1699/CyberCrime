@@ -60,14 +60,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_crime_category">Crime Category</label>
-                            <select class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_crime_category" name="category" required="">
-                                <option value="">Select Category</option>
-                                <option value="phishing">Phishing / Social Engineering</option>
-                                <option value="identity_theft">Identity Theft</option>
-                                <option value="financial_fraud">Financial Fraud</option>
-                                <option value="ransomware">Ransomware / Malware</option>
-                                <option value="harassment">Cyber Harassment</option>
-                            </select>
+                            {{ form.case_type }}
                         </div>
                         <div class="space-y-2">
                             <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_incident_location">Incident Location / IP / URL</label>
