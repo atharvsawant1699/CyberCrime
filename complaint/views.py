@@ -4,8 +4,39 @@ from django.core.paginator import Paginator
 from django.contrib import messages
 from django.utils import timezone
 from django.db.models import Q
+from django.core.exceptions import PermissionDenied
 from .models import Complaint, Officer, CaseType, CaseAssignmentHistory
 from .forms import ComplaintForm
+
+def superuser_required(view_func):
+    """
+    Decorator for views that checks that the user is logged in and is a superuser.
+    """
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if not request.user.is_superuser:
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
+
+def officer_required(view_func):
+    """
+    Decorator for views that checks that the user is logged in and is an officer.
+    Superusers are redirected to the admin dashboard.
+    """
+    def wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.user.is_superuser:
+            return redirect('admin_dashboard')
+            
+        has_profile = Officer.objects.filter(user=request.user).exists()
+        is_officer = has_profile or request.user.groups.filter(name='Officers').exists()
+        if not is_officer:
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+    return wrapped_view
 
 def home(request):
     from cyber_intelligence.models import CyberNews
@@ -74,8 +105,16 @@ def register_complaint(request):
 
 @login_required
 def complaint_list(request):
-    # Retrieve complaints for the logged-in user (citizen dashboard)
-    complaints = Complaint.objects.filter(user=request.user).order_by('-date_submitted')
+    if request.user.is_superuser:
+        complaints = Complaint.objects.all().order_by('-date_submitted')
+    elif Officer.objects.filter(user=request.user).exists() or request.user.groups.filter(name='Officers').exists():
+        officer_profile = Officer.objects.filter(user=request.user).first()
+        if not officer_profile:
+            officer_profile = Officer.objects.filter(email=request.user.email).first()
+        complaints = Complaint.objects.filter(assigned_officer=officer_profile).order_by('-date_submitted')
+    else:
+        complaints = Complaint.objects.filter(user=request.user).order_by('-date_submitted')
+        
     return render(request, 'complaints/complaint_list.html', {'complaints': complaints})
 
 @login_required
@@ -106,19 +145,11 @@ def case_detail(request, complaint_id):
     }
     return render(request, 'complaints/case_detail.html', context)
 
-@login_required
+@officer_required
 def officer_dashboard(request):
-    # Scoping permission checks for officers
     officer_profile = Officer.objects.filter(user=request.user).first()
     if not officer_profile:
-        # Fallback to email matching for backward compatibility
         officer_profile = Officer.objects.filter(email=request.user.email).first()
-    is_admin = request.user.is_superuser or request.user.is_staff
-    is_officer = officer_profile is not None or request.user.groups.filter(name='Officers').exists() or is_admin
-    
-    if not is_officer:
-        messages.error(request, 'Access denied. You do not have permission to view the officer dashboard.')
-        return redirect('home')
         
     if request.method == 'POST':
         complaint_id = request.POST.get('case_id', '').replace('#', '').strip()
@@ -127,10 +158,7 @@ def officer_dashboard(request):
         report = request.FILES.get('report')
         
         try:
-            if is_admin:
-                complaint = Complaint.objects.get(Q(complaint_id=complaint_id) | Q(id=int(complaint_id.replace('CYB', '').replace('CG-', '')) if complaint_id.replace('CYB', '').replace('CG-', '').isdigit() else None))
-            else:
-                complaint = Complaint.objects.get(complaint_id=complaint_id, assigned_officer=officer_profile)
+            complaint = Complaint.objects.get(complaint_id=complaint_id, assigned_officer=officer_profile)
                 
             if status:
                 status_mapping = {
@@ -158,11 +186,7 @@ def officer_dashboard(request):
             
         return redirect('officer')
         
-    if is_admin:
-        complaints = Complaint.objects.all().order_by('-date_submitted')
-    else:
-        complaints = Complaint.objects.filter(assigned_officer=officer_profile).order_by('-date_submitted')
-        
+    complaints = Complaint.objects.filter(assigned_officer=officer_profile).order_by('-date_submitted')
     officers = Officer.objects.all()
     
     total_cases = complaints.count()
@@ -186,12 +210,8 @@ def officer_dashboard(request):
     
     return render(request, 'complaints/officer_dashboard.html', context)
 
-@login_required
+@superuser_required
 def admin_dashboard(request):
-    # Restrict to administrators
-    if not (request.user.is_superuser or request.user.is_staff):
-        messages.error(request, 'Access denied. You must be an administrator to access this panel.')
-        return redirect('home')
         
     ensure_default_case_types()
     complaints = Complaint.objects.all().order_by('-date_submitted')
@@ -227,11 +247,8 @@ def admin_dashboard(request):
     
     return render(request, 'complaints/admin_dashboard.html', context)
 
-@login_required
+@superuser_required
 def reassign_case(request):
-    if not (request.user.is_superuser or request.user.is_staff):
-        messages.error(request, 'Access denied.')
-        return redirect('home')
         
     if request.method == 'POST':
         complaint_id = request.POST.get('complaint_id')
@@ -272,11 +289,8 @@ def reassign_case(request):
             
     return redirect(request.META.get('HTTP_REFERER', 'admin_dashboard'))
 
-@login_required
+@superuser_required
 def toggle_officer_availability(request, officer_id):
-    if not (request.user.is_superuser or request.user.is_staff):
-        messages.error(request, 'Access denied.')
-        return redirect('home')
         
     try:
         officer = Officer.objects.get(id=officer_id)
@@ -289,11 +303,8 @@ def toggle_officer_availability(request, officer_id):
         
     return redirect(request.META.get('HTTP_REFERER', 'admin_dashboard'))
 
-@login_required
+@superuser_required
 def update_officer_specialization(request, officer_id):
-    if not (request.user.is_superuser or request.user.is_staff):
-        messages.error(request, 'Access denied.')
-        return redirect('home')
         
     if request.method == 'POST':
         specialization = request.POST.get('specialization')

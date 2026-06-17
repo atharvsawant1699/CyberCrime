@@ -157,16 +157,18 @@
 <!-- Desktop Navigation Links -->
 <nav class="hidden lg:flex items-center space-x-6 h-full">
 <a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'home' %}">Home</a>
-<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'register' %}">Register Complaint</a>
-<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'complaints' %}">Track Complaint</a>
-{% if is_admin %}
-<a class="font-body-base text-body-base text-emerald-600 hover:text-emerald-700 font-bold transition-colors duration-200" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
-{% endif %}
 {% if is_officer %}
 <a class="font-body-base text-body-base text-primary hover:text-primary/80 font-bold transition-colors duration-200" href="{% url 'officer' %}">Officer Console</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'complaints' %}">My Cases</a>
+{% else %}
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'register' %}">Register Complaint</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'complaints' %}">Track Complaint</a>
+{% endif %}
+{% if is_admin %}
+<a class="font-body-base text-body-base text-emerald-600 hover:text-emerald-700 font-bold transition-colors duration-200" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'cyber_intelligence:cyber_dashboard' %}">Cyber Intelligence</a>
 {% endif %}
 <a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'profile' %}">Profile</a>
-<a class="font-body-base text-body-base text-on-surface-variant hover:text-primary transition-colors duration-200" href="{% url 'cyber_intelligence:cyber_dashboard' %}">Cyber Intelligence</a>
 </nav>
 <!-- Actions -->
 <div class="flex items-center gap-4">
@@ -197,16 +199,18 @@
 </div>
 <nav class="flex flex-col gap-6">
 <a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'home' %}">Home</a>
-<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'register' %}">Register Complaint</a>
-<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'complaints' %}">Track Complaint</a>
-{% if is_admin %}
-<a class="text-2xl font-semibold text-emerald-500 hover:text-emerald-400 transition-colors" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
-{% endif %}
 {% if is_officer %}
 <a class="text-2xl font-semibold text-primary hover:text-primary-light transition-colors" href="{% url 'officer' %}">Officer Console</a>
+<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'complaints' %}">My Cases</a>
+{% else %}
+<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'register' %}">Register Complaint</a>
+<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'complaints' %}">Track Complaint</a>
+{% endif %}
+{% if is_admin %}
+<a class="text-2xl font-semibold text-emerald-500 hover:text-emerald-400 transition-colors" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'cyber_intelligence:cyber_dashboard' %}">Cyber Intelligence</a>
 {% endif %}
 <a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'profile' %}">Profile</a>
-<a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'cyber_intelligence:cyber_dashboard' %}">Cyber Intelligence</a>
             {% if not user.is_authenticated %}
                 <hr class="border-outline/30 my-2"/>
                 <a class="text-2xl font-semibold hover:text-primary transition-colors" href="{% url 'login' %}">Login</a>

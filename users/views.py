@@ -48,17 +48,16 @@ def login_view(request):
                 login(request, user)
                 messages.success(request, f"Access authorized. Welcome back, {username}!")
                 
-                # If officer, redirect to officer dashboard
+                # Redirect based on user roles
                 from complaint.models import Officer
-                is_officer = (
-                    user.is_staff or 
-                    user.is_superuser or
-                    user.groups.filter(name='Officers').exists() or 
-                    Officer.objects.filter(email=user.email).exists()
-                )
-                if is_officer:
+                is_officer = Officer.objects.filter(user=user).exists() or user.groups.filter(name='Officers').exists()
+                
+                if user.is_superuser:
+                    return redirect('admin_dashboard')
+                elif is_officer:
                     return redirect('officer')
-                return redirect('home')
+                else:
+                    return redirect('home')
             else:
                 messages.error(request, "Invalid username or password.")
         else:

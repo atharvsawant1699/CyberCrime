@@ -20,10 +20,13 @@ class Officer(models.Model):
     full_name = models.CharField(max_length=150, default='', blank=True)
     department = models.CharField(max_length=100, default='', blank=True)
     rank = models.CharField(max_length=100, default='', blank=True)
+    designation = models.CharField(max_length=100, default='', blank=True)
     specialization = models.CharField(max_length=100, choices=SPECIALIZATION_CHOICES, default='Phishing', blank=True)
     contact_details = models.TextField(blank=True, null=True, default='')
     availability_status = models.BooleanField(default=True)
+    active_status = models.BooleanField(default=True)
     created_date = models.DateTimeField(default=timezone.now, blank=True)
+    created_at = models.DateTimeField(default=timezone.now, blank=True)
 
     # Legacy fields kept for compatibility with existing tests/queries
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -33,6 +36,22 @@ class Officer(models.Model):
     Station_code = models.CharField(max_length=50, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        # Sync rank and designation
+        if self.designation and not self.rank:
+            self.rank = self.designation
+        elif self.rank and not self.designation:
+            self.designation = self.rank
+
+        # Sync availability_status and active_status
+        if self.active_status != self.availability_status:
+            self.availability_status = self.active_status
+
+        # Sync created_at and created_date
+        if self.created_at and not self.created_date:
+            self.created_date = self.created_at
+        elif self.created_date and not self.created_at:
+            self.created_at = self.created_date
+
         # Sync full_name and name
         if self.full_name and not self.name:
             self.name = self.full_name
@@ -60,6 +79,38 @@ class Officer(models.Model):
             
         if not self.Station_code:
             self.Station_code = "CYB-HQ"
+
+        # Check if user is set. If not, try to find a user with the same email
+        if not self.user and self.email:
+            user_match = User.objects.filter(email=self.email).first()
+            if user_match:
+                self.user = user_match
+            else:
+                # Create user
+                username = self.officer_id or self.email.split('@')[0]
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}_{counter}"
+                    counter += 1
+                
+                names = (self.full_name or self.name or "Officer").split(' ', 1)
+                first_name = names[0]
+                last_name = names[1] if len(names) > 1 else ""
+                
+                user = User.objects.create_user(
+                    username=username,
+                    email=self.email,
+                    password=f"Officer@{self.officer_id or '123'}",
+                    first_name=first_name,
+                    last_name=last_name
+                )
+                
+                from django.contrib.auth.models import Group
+                group, _ = Group.objects.get_or_create(name='Officers')
+                user.groups.add(group)
+                
+                self.user = user
 
         super().save(*args, **kwargs)
 
@@ -102,6 +153,7 @@ class Complaint(models.Model):
 
     complaint_id = models.CharField(max_length=50, unique=True, null=True, blank=True, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='complaints')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='created_complaints')
     case_type = models.ForeignKey(CaseType, on_delete=models.SET_NULL, null=True, blank=True, related_name='complaints')
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -135,6 +187,12 @@ class Complaint(models.Model):
     def save(self, *args, **kwargs):
         is_new = self.pk is None
         
+        # Sync user and created_by
+        if self.user and not self.created_by:
+            self.created_by = self.user
+        elif self.created_by and not self.user:
+            self.user = self.created_by
+            
         # Determine priority and assigned_officer from CaseType if not set
         if self.case_type:
             if not self.priority or self.priority == 'Medium':
