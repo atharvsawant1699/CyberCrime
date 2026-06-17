@@ -30,5 +30,6 @@ def branding_metadata(request):
         'RELEASE_DATE': getattr(settings, 'RELEASE_DATE', 'June 2026'),
         'COMPANY_NAME': getattr(settings, 'COMPANY_NAME', 'AIsync Software Solutions'),
         'DEVELOPER_NAME': getattr(settings, 'DEVELOPER_NAME', 'Indranil Sawant'),
+        'DISPLAY_DEVELOPER_NAME': getattr(settings, 'DISPLAY_DEVELOPER_NAME', 'Atharva Sawant'),
         'COPYRIGHT_YEAR': getattr(settings, 'COPYRIGHT_YEAR', '2026'),
     }

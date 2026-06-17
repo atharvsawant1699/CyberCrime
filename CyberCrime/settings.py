@@ -186,6 +186,7 @@ BUILD_NUMBER = '2026.001'
 RELEASE_DATE = 'June 2026'
 COMPANY_NAME = 'AIsync Software Solutions'
 DEVELOPER_NAME = 'Indranil Sawant'
+DISPLAY_DEVELOPER_NAME = 'Atharva Sawant'
 COPYRIGHT_YEAR = '2026'
 
 
