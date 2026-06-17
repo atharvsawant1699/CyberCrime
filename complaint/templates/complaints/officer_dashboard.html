@@ -1,5 +1,5 @@
 {% extends "users/base.html" %}
-{% block title %}Officer Command Dashboard | CyberGuard{% endblock %}
+{% block title %}Officer Command Dashboard | {{ SOFTWARE_NAME }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -62,16 +62,51 @@
                     <p class="text-xs text-on-surface-variant">{{ officer_profile.rank|default:"Investigator" }}</p>
                 </div>
             </div>
+            <div class="px-4 py-2 text-[10px] text-on-surface-variant/80 font-mono-data border-t border-outline-variant/30 space-y-0.5">
+                <div>{{ SOFTWARE_NAME }} {{ SOFTWARE_VERSION }}</div>
+                <div>Build: {{ BUILD_NUMBER }}</div>
+                <div>&copy; {{ COPYRIGHT_YEAR }} {{ COMPANY_NAME }}</div>
+            </div>
         </div>
     </aside>
 
     <!-- Main Content Canvas -->
-    <main class="flex-1 overflow-y-auto bg-background p-6 md:p-8 text-on-surface">
+    <main class="flex-grow flex-1 overflow-y-auto bg-background p-6 md:p-8 text-on-surface">
         <div class="max-w-6xl mx-auto">
-            <header class="flex justify-between items-end mb-8">
+            <!-- Mobile Dashboard Navigation (Accordion) -->
+            <div class="block md:hidden mb-6 bg-surface-container-low rounded-xl border border-outline-variant p-4">
+                <button class="w-full flex justify-between items-center text-sm font-bold text-on-surface-variant focus:outline-none bg-transparent border-0 cursor-pointer" onclick="toggleMobileSidebar()">
+                    <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">menu_open</span>
+                        Officer Console Menu
+                    </span>
+                    <span class="material-symbols-outlined transition-transform duration-200" id="sidebarChevron">expand_more</span>
+                </button>
+                <div class="hidden flex-col gap-2 mt-4" id="mobileSidebarLinks">
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item shadow-sm text-white no-underline" href="{% url 'officer' %}">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="font-body-base">Dashboard</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="{% url 'complaints' %}">
+                        <span class="material-symbols-outlined">folder_managed</span>
+                        <span class="font-body-base">My Cases</span>
+                    </a>
+                    {% if is_admin %}
+                        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="{% url 'admin_dashboard' %}">
+                            <span class="material-symbols-outlined">admin_panel_settings</span>
+                            <span class="font-body-base">Admin Panel</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                 <div>
-                    <h1 class="font-display-lg text-display-lg text-on-surface font-bold">Officer Command Console</h1>
-                    <p class="text-on-surface-variant font-body-base">Logged in as: <strong>{{ officer_profile.full_name }}</strong> ({% if officer_profile.availability_status %}Active & Available{% else %}Unavailable{% endif %})</p>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2 py-0.5 bg-primary/10 text-primary rounded text-[11px] font-mono-data font-bold">{{ SOFTWARE_NAME }} Officer Core</span>
+                        <span class="text-xs text-on-surface-variant font-mono-data">{{ SOFTWARE_VERSION }}-b{{ BUILD_NUMBER }}</span>
+                    </div>
+                    <h1 class="font-display-lg text-display-lg text-on-surface font-bold">{{ SOFTWARE_NAME }} Command Console</h1>
+                    <p class="text-on-surface-variant font-body-base">Logged in as: <strong>{{ officer_profile.full_name }}</strong> ({% if officer_profile.availability_status %}Active & Available{% else %}Unavailable{% endif %}) | Managed by {{ COMPANY_NAME }}</p>
                 </div>
             </header>
 
@@ -180,9 +215,9 @@
 </div>
 
 <!-- Modal for Status Update -->
-<div class="hidden fixed inset-0 z-[60] overflow-y-auto items-center justify-center" id="statusModal">
+<div class="hidden fixed inset-0 z-[60] overflow-y-auto items-center justify-center p-4" id="statusModal">
     <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeModal()"></div>
-    <div class="relative bg-surface rounded-xl max-w-lg w-full p-8 shadow-2xl border border-outline-variant z-10 text-on-surface">
+    <div class="relative bg-surface rounded-xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-outline-variant z-10 text-on-surface">
         <div class="flex justify-between items-center mb-6">
             <h3 class="font-headline-md text-on-surface font-bold">Update Investigation Details</h3>
             <button class="text-on-surface-variant hover:text-on-surface border-0 bg-transparent cursor-pointer" onclick="closeModal()">
@@ -225,6 +260,20 @@
 
 {% block extra_js %}
 <script>
+    function toggleMobileSidebar() {
+        const links = document.getElementById('mobileSidebarLinks');
+        const chevron = document.getElementById('sidebarChevron');
+        if (links.classList.contains('hidden')) {
+            links.classList.remove('hidden');
+            links.classList.add('flex');
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            links.classList.add('hidden');
+            links.classList.remove('flex');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+
     function openModal(caseId, status) {
         document.getElementById('statusModal').classList.remove('hidden');
         document.getElementById('statusModal').classList.add('flex');

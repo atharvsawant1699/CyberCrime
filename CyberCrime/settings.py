@@ -29,7 +29,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = 'django-insecure-4rsw64xp0_maa%p9&3xn7drmdk8c7g2!zq528uo!9yf@w(@x5g'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False').lower() in ('true', '1', 'yes')
 
 ALLOWED_HOSTS = ['cybercrime-bt88.onrender.com', 'localhost', '127.0.0.1']
 
@@ -75,6 +75,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'complaint.context_processors.officer_status',
+                'complaint.context_processors.branding_metadata',
             ],
         },
     },
@@ -177,5 +178,15 @@ STORAGES = {
 }
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Enterprise Branding & Licensing Metadata
+SOFTWARE_NAME = 'CyberGuard'
+SOFTWARE_VERSION = 'v1.0.0'
+BUILD_NUMBER = '2026.001'
+RELEASE_DATE = 'June 2026'
+COMPANY_NAME = 'AIsync Software Solutions'
+DEVELOPER_NAME = 'Indranil Sawant'
+COPYRIGHT_YEAR = '2026'
+
 
 

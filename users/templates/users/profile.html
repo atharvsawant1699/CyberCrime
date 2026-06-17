@@ -1,5 +1,5 @@
 {% extends "users/base.html" %}
-{% block title %}User Profile | CyberGuard{% endblock %}
+{% block title %}User Profile | {{ SOFTWARE_NAME }}{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -77,6 +77,23 @@
                     <div class="bg-primary h-2 rounded-full w-[85%]"></div>
                 </div>
                 <p class="text-label-caps font-label-caps opacity-90">Security Strength: Strong (85%)</p>
+            </div>
+            <!-- Product Info Widget -->
+            <div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm text-xs text-on-surface-variant font-mono-data space-y-1">
+                <div class="font-bold text-on-surface mb-2 font-body-base flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-primary text-[18px]">info</span>
+                    System Metadata
+                </div>
+                <div>{{ SOFTWARE_NAME }} {{ SOFTWARE_VERSION }}</div>
+                <div>Build: {{ BUILD_NUMBER }}</div>
+                <div>Developer: {{ DEVELOPER_NAME }}</div>
+                <div>Owner: {{ COMPANY_NAME }}</div>
+                <div class="pt-2 flex flex-wrap gap-1 font-body-base text-[11px] text-primary">
+                    <a href="{% url 'about' %}" class="hover:underline no-underline">About</a> • 
+                    <a href="{% url 'license' %}" class="hover:underline no-underline">License</a> • 
+                    <a href="{% url 'privacy_policy' %}" class="hover:underline no-underline">Privacy</a> • 
+                    <a href="{% url 'terms_of_service' %}" class="hover:underline no-underline">Terms</a>
+                </div>
             </div>
         </aside>
 
@@ -194,7 +211,7 @@
 <!-- Edit Profile Modal -->
 <div class="fixed inset-0 z-[100] hidden items-center justify-center p-4" id="editProfileModal">
     <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeEditModal()"></div>
-    <div class="relative w-full max-w-lg overflow-hidden bg-surface rounded-2xl shadow-2xl p-8 border border-outline-variant">
+    <div class="relative w-full max-w-lg overflow-hidden bg-surface rounded-2xl shadow-2xl p-6 md:p-8 border border-outline-variant">
         <div class="flex justify-between items-center mb-6">
             <h3 class="font-headline-md text-on-surface">Update Profile</h3>
             <button class="p-2 hover:bg-surface-variant rounded-full transition-colors border-0 bg-transparent text-on-surface-variant" onclick="closeEditModal()">

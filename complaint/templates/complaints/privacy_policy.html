@@ -1,0 +1,65 @@
+{% extends "users/base.html" %}
+{% block title %}Privacy Policy | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block main_container %}
+<main class="py-16 px-4 md:px-8 bg-background max-w-4xl mx-auto">
+    <div class="space-y-8">
+        <!-- Header -->
+        <div>
+            <h1 class="font-display-lg text-display-lg text-on-surface font-bold">Privacy Policy</h1>
+            <p class="text-on-surface-variant text-body-base mt-2">
+                Effective Date: {{ RELEASE_DATE }} • Platform: {{ SOFTWARE_NAME }}
+            </p>
+        </div>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Policy Body -->
+        <article class="prose max-w-none text-on-surface text-sm space-y-6">
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">1. Information Collection</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    We collect personal information necessary for incident verification and reporting, including name, email, phone number, and digital evidence attachments (screenshots, transaction logs, documents). This information is collected to enable secure investigation operations.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">2. Encryption & Data Protection</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    All report records, files, and correspondence are encrypted during transmission and securely stored using state-of-the-art database systems. Access to evidence is strictly controlled using role-based permissions, limited to assigned forensic officers and administrators of <strong>{{ COMPANY_NAME }}</strong>.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">3. Information Disclosure</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Personal data and case evidence will only be shared with authorized law enforcement agencies, cybercrime divisions, or court officers as required under cybercrime laws. We do not sell or lease user information to commercial third parties.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">4. Cookies and Sessions</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    {{ SOFTWARE_NAME }} utilizes secure cookies only to manage user sessions and authentication states. No marketing or tracking cookies are employed on this platform.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">5. Users' Rights</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Users have the right to request case updates and verify profile information. Since this system processes official crime reports, modification or deletion of submitted case details is subject to strict forensic verification and officer approvals.
+                </p>
+            </section>
+        </article>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Back Link -->
+        <div>
+            <a href="{% url 'home' %}" class="px-6 py-2.5 bg-surface-container border border-outline text-on-surface font-bold rounded-lg no-underline hover:bg-surface-container-high transition-all">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

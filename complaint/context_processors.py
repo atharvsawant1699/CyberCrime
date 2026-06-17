@@ -17,3 +17,18 @@ def officer_status(request):
         'is_officer': is_officer,
         'is_admin': is_admin
     }
+
+def branding_metadata(request):
+    """
+    Context processor to add global software branding variables to all template contexts.
+    """
+    from django.conf import settings
+    return {
+        'SOFTWARE_NAME': getattr(settings, 'SOFTWARE_NAME', 'CyberGuard'),
+        'SOFTWARE_VERSION': getattr(settings, 'SOFTWARE_VERSION', 'v1.0.0'),
+        'BUILD_NUMBER': getattr(settings, 'BUILD_NUMBER', '2026.001'),
+        'RELEASE_DATE': getattr(settings, 'RELEASE_DATE', 'June 2026'),
+        'COMPANY_NAME': getattr(settings, 'COMPANY_NAME', 'AIsync Software Solutions'),
+        'DEVELOPER_NAME': getattr(settings, 'DEVELOPER_NAME', 'Indranil Sawant'),
+        'COPYRIGHT_YEAR': getattr(settings, 'COPYRIGHT_YEAR', '2026'),
+    }

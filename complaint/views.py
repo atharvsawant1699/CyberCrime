@@ -321,3 +321,24 @@ def update_officer_specialization(request, officer_id):
 def submission_successful(request):
     complaint_id = request.session.get('last_submission_id', 'CG-UNKNOWN')
     return render(request, 'complaints/submission_successful.html', {'complaint_id': complaint_id})
+
+def about(request):
+    return render(request, 'complaints/about.html')
+
+def license_view(request):
+    return render(request, 'complaints/license.html')
+
+def privacy_policy(request):
+    return render(request, 'complaints/privacy_policy.html')
+
+def terms_of_service(request):
+    return render(request, 'complaints/terms_of_service.html')
+
+def disclaimer(request):
+    return render(request, 'complaints/disclaimer.html')
+
+def contact(request):
+    if request.method == 'POST':
+        messages.success(request, 'Support request submitted. Our response center will contact you shortly.')
+        return redirect('contact')
+    return render(request, 'complaints/contact.html')

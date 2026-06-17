@@ -28,64 +28,66 @@
 
     <!-- Complaints Table -->
     <div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
-        <table class="w-full text-left border-collapse" id="complaintsTable">
-            <thead>
-                <tr class="bg-surface-container-low border-b border-outline-variant">
-                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Complaint ID</th>
-                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Title</th>
-                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Category</th>
-                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Date Filed</th>
-                    <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Status</th>
-                    <th class="px-6 py-4 text-right"></th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-outline-variant text-on-surface">
-                {% for complaint in complaints %}
-                <tr class="hover:bg-surface-container transition-colors cursor-pointer group complaint-row" 
-                    data-id="{{ complaint.complaint_id }}"
-                    data-title="{{ complaint.title }}"
-                    data-status="{{ complaint.status }}"
-                    onclick="window.location='{% url 'case_detail' complaint.complaint_id %}'">
-                    <td class="px-6 py-5 font-mono-data text-on-surface-variant">#{{ complaint.complaint_id }}</td>
-                    <td class="px-6 py-5 font-bold text-on-surface">{{ complaint.title }}</td>
-                    <td class="px-6 py-5 text-on-surface-variant">{{ complaint.category|title }}</td>
-                    <td class="px-6 py-5 text-on-surface-variant">{{ complaint.created_at|date:"M d, Y" }}</td>
-                    <td class="px-6 py-5 status-cell" data-status-val="{{ complaint.status }}">
-                        {% if complaint.status == 'Submitted' %}
-                        <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
-                            Submitted
-                        </span>
-                        {% elif complaint.status == 'Under Investigation' %}
-                        <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-                            Investigating
-                        </span>
-                        {% elif complaint.status == 'Resolved' %}
-                        <span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
-                            Resolved
-                        </span>
-                        {% else %}
-                        <span class="px-3 py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
-                            {{ complaint.status }}
-                        </span>
-                        {% endif %}
-                    </td>
-                    <td class="px-6 py-5 text-right">
-                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr id="emptyRow">
-                    <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant font-body-base">
-                        No complaints reported yet. <a href="{% url 'register' %}" class="text-primary hover:underline font-bold">Report an Incident</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse" id="complaintsTable">
+                <thead>
+                    <tr class="bg-surface-container-low border-b border-outline-variant">
+                        <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Complaint ID</th>
+                        <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Title</th>
+                        <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Category</th>
+                        <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Date Filed</th>
+                        <th class="px-6 py-4 font-bold text-on-surface uppercase tracking-wider text-xs">Status</th>
+                        <th class="px-6 py-4 text-right"></th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant text-on-surface">
+                    {% for complaint in complaints %}
+                    <tr class="hover:bg-surface-container transition-colors cursor-pointer group complaint-row" 
+                        data-id="{{ complaint.complaint_id }}"
+                        data-title="{{ complaint.title }}"
+                        data-status="{{ complaint.status }}"
+                        onclick="window.location='{% url 'case_detail' complaint.complaint_id %}'">
+                        <td class="px-6 py-5 font-mono-data text-on-surface-variant">#{{ complaint.complaint_id }}</td>
+                        <td class="px-6 py-5 font-bold text-on-surface">{{ complaint.title }}</td>
+                        <td class="px-6 py-5 text-on-surface-variant">{{ complaint.category|title }}</td>
+                        <td class="px-6 py-5 text-on-surface-variant">{{ complaint.created_at|date:"M d, Y" }}</td>
+                        <td class="px-6 py-5 status-cell" data-status-val="{{ complaint.status }}">
+                            {% if complaint.status == 'Submitted' %}
+                            <span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                                Submitted
+                            </span>
+                            {% elif complaint.status == 'Under Investigation' %}
+                            <span class="px-3 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                Investigating
+                            </span>
+                            {% elif complaint.status == 'Resolved' %}
+                            <span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                Resolved
+                            </span>
+                            {% else %}
+                            <span class="px-3 py-1 bg-error-container text-on-error-container rounded-full text-xs font-bold flex items-center w-fit gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                {{ complaint.status }}
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-5 text-right">
+                            <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">chevron_right</span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr id="emptyRow">
+                        <td colspan="6" class="px-6 py-12 text-center text-on-surface-variant font-body-base">
+                            No complaints reported yet. <a href="{% url 'register' %}" class="text-primary hover:underline font-bold">Report an Incident</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
 

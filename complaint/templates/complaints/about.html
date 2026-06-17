@@ -1,0 +1,103 @@
+{% extends "users/base.html" %}
+{% block title %}About {{ SOFTWARE_NAME }} | Enterprise Portal{% endblock %}
+
+{% block main_container %}
+<main class="py-16 px-4 md:px-8 bg-background max-w-4xl mx-auto">
+    <div class="space-y-12">
+        <!-- Header -->
+        <div class="text-center space-y-4">
+            <h1 class="font-display-lg text-display-lg text-primary font-bold">{{ SOFTWARE_NAME }}</h1>
+            <p class="text-on-surface-variant text-body-base max-w-xl mx-auto">
+                Next-generation cybercrime incident reporting, digital forensics registry, and investigation workflow orchestration platform.
+            </p>
+        </div>
+
+        <!-- System Summary Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6">
+            <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-on-surface mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">security</span>
+                    Product Mission
+                </h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                    Designed to bridge the gap between citizens, security agencies, and cyber forensic teams, {{ SOFTWARE_NAME }} provides a secure, auditable workspace for processing complex digital threats, phishing cases, and financial fraud incidents.
+                </p>
+            </div>
+            <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm">
+                <h3 class="font-bold text-on-surface mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">terminal</span>
+                    Technology & Security
+                </h3>
+                <p class="text-sm text-on-surface-variant leading-relaxed">
+                    Powered by Django, PostgreSQL, and secure cloud storage. Integrating secure file handling, end-to-end audit logging, auto-routing algorithms, and real-time threat intelligence updates.
+                </p>
+            </div>
+        </div>
+
+        <!-- Key Features List -->
+        <section class="bg-surface-container-lowest border border-outline-variant rounded-2xl p-8 shadow-sm">
+            <h2 class="font-headline-md text-headline-md text-on-surface font-bold mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">verified_user</span>
+                Key Core Features
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-primary shrink-0">edit_document</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-on-surface">Complaint Registration</h4>
+                        <p class="text-xs text-on-surface-variant mt-1">Guided, multi-step incident reporting wizard with input validation.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-primary shrink-0">folder_zip</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-on-surface">Evidence Registry</h4>
+                        <p class="text-xs text-on-surface-variant mt-1">Secure uploads of logs, screenshots, and document artifacts.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-primary shrink-0">shield_person</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-on-surface">Officer Portal</h4>
+                        <p class="text-xs text-on-surface-variant mt-1">Queue management, case priority routing, and log entry systems.</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-primary shrink-0">dashboard_customize</span>
+                    <div>
+                        <h4 class="font-bold text-sm text-on-surface">Command Center</h4>
+                        <p class="text-xs text-on-surface-variant mt-1">Admin control tab, automatic assignment logic, and roster roster management.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Metadata -->
+        <section class="bg-surface-container-low border border-outline-variant rounded-2xl p-8 text-on-surface">
+            <h3 class="font-bold mb-6 text-on-surface uppercase tracking-wider text-xs">Software Identification & Metadata</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+                <div>
+                    <p class="text-xs text-on-surface-variant uppercase font-semibold">Product Version</p>
+                    <p class="font-mono-data text-primary font-bold mt-1">{{ SOFTWARE_VERSION }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant uppercase font-semibold">Build ID</p>
+                    <p class="font-mono-data text-on-surface font-bold mt-1">#{{ BUILD_NUMBER }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant uppercase font-semibold">Release Date</p>
+                    <p class="font-body-base text-on-surface mt-1">{{ RELEASE_DATE }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-on-surface-variant uppercase font-semibold">Developer</p>
+                    <p class="font-body-base text-on-surface font-bold mt-1">{{ DEVELOPER_NAME }}</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-6 border-t border-outline-variant flex flex-col sm:flex-row justify-between text-xs text-on-surface-variant gap-4">
+                <p>Company Owner: <strong>{{ COMPANY_NAME }}</strong></p>
+                <p>© {{ COPYRIGHT_YEAR }} {{ COMPANY_NAME }}. All Rights Reserved.</p>
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}

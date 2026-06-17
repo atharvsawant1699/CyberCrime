@@ -20,11 +20,20 @@
                 <div class="w-16 h-16 bg-primary-container flex items-center justify-center rounded-full mb-4">
                     <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">lock</span>
                 </div>
-                <h1 class="font-headline-md text-[24px] font-bold text-on-surface">Portal Login</h1>
+                <h1 class="font-headline-md text-[24px] font-bold text-on-surface">{{ SOFTWARE_NAME }} Login</h1>
                 <p class="font-body-base text-body-base text-on-surface-variant text-center mt-2">
-                    Enter your credentials to access the secure terminal.
+                    Enter your credentials to access the secure {{ SOFTWARE_NAME }} terminal.
                 </p>
             </div>
+
+            <!-- Security Warning -->
+            <div class="mb-6 p-4 bg-error-container/30 border border-error/20 rounded-lg text-on-error-container text-[13px] flex gap-3">
+                <span class="material-symbols-outlined text-[20px] text-error shrink-0" style="font-variation-settings: 'FILL' 1;">warning</span>
+                <p class="leading-relaxed font-body-base">
+                    <strong>SECURITY WARNING:</strong> This system is intended for authorized use only. Unauthorized access, modification, or misuse is strictly prohibited and subject to monitoring and prosecution under applicable laws.
+                </p>
+            </div>
+
             <!-- Login Form -->
             <form action="{% url 'login' %}" class="space-y-6" method="post">
                 {% csrf_token %}
@@ -65,10 +74,15 @@
                 </button>
             </form>
             <!-- Footer Link -->
-            <div class="mt-8 pt-6 border-t border-outline-variant text-center">
+            <div class="mt-8 pt-6 border-t border-outline-variant text-center space-y-4">
                 <p class="font-body-base text-body-base text-on-surface-variant">
                     New user? <a class="text-primary font-bold hover:underline no-underline" href="{% url 'signup' %}">Create Account</a>
                 </p>
+                <div class="text-[11px] text-on-surface-variant/80 font-mono-data space-y-1">
+                    <div>{{ SOFTWARE_NAME }} {{ SOFTWARE_VERSION }} (Build {{ BUILD_NUMBER }})</div>
+                    <div>&copy; {{ COPYRIGHT_YEAR }} {{ COMPANY_NAME }}. All Rights Reserved.</div>
+                    <div class="text-[10px] opacity-75">Developed by {{ DEVELOPER_NAME }}</div>
+                </div>
             </div>
         </div>
         <!-- Trust Badges -->
