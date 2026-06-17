@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from cloudinary_storage.storage import RawMediaCloudinaryStorage
 
 class Officer(models.Model):
     SPECIALIZATION_CHOICES = [
@@ -104,14 +105,14 @@ class Complaint(models.Model):
     case_type = models.ForeignKey(CaseType, on_delete=models.SET_NULL, null=True, blank=True, related_name='complaints')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    evidence = models.FileField(upload_to='evidence/', blank=True, null=True)
+    evidence = models.FileField(upload_to='evidence/', blank=True, null=True, storage=RawMediaCloudinaryStorage())
     location = models.CharField(max_length=255)
     date_submitted = models.DateTimeField(default=timezone.now, blank=True)
     priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='Medium')
     status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='Pending')
     assigned_officer = models.ForeignKey(Officer, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_complaints')
     investigation_notes = models.TextField(blank=True, null=True, default='')
-    investigation_report = models.FileField(upload_to='reports/', blank=True, null=True)
+    investigation_report = models.FileField(upload_to='reports/', blank=True, null=True, storage=RawMediaCloudinaryStorage())
 
     # Legacy fields
     name = models.CharField(max_length=100, blank=True, null=True)
