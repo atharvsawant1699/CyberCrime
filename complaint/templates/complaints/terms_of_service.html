@@ -1,0 +1,65 @@
+{% extends "users/base.html" %}
+{% block title %}Terms of Service | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block main_container %}
+<main class="py-16 px-4 md:px-8 bg-background max-w-4xl mx-auto">
+    <div class="space-y-8">
+        <!-- Header -->
+        <div>
+            <h1 class="font-display-lg text-display-lg text-on-surface font-bold">Terms of Service</h1>
+            <p class="text-on-surface-variant text-body-base mt-2">
+                Last Revised: {{ RELEASE_DATE }} • Platform: {{ SOFTWARE_NAME }}
+            </p>
+        </div>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Terms Body -->
+        <article class="prose max-w-none text-on-surface text-sm space-y-6">
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">1. Acceptance of Terms</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    By accessing and using {{ SOFTWARE_NAME }}, you agree to be bound by these Terms of Service. If you do not agree, you must immediately cease using the platform.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">2. Incident Reporting Accuracy</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    When registering a complaint, users must provide truthful, complete, and accurate information. False reporting, filing fraudulent evidence, or impersonating individuals in complaints is a serious crime under cyber law and is subject to prosecution.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">3. Authorized Personnel Use</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    The Officer Console and Admin Command Center are restricted exclusively to authorized cybercrime task force officers. Any attempt to access these restricted modules by unauthorized accounts is an offense and is logged under the security auditing systems of <strong>{{ COMPANY_NAME }}</strong>.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">4. Acceptable System Performance</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Users agree not to disrupt the operation of {{ SOFTWARE_NAME }}, introduce viruses, spyware, or perform security vulnerability scanning on the portal. System auditing is active, and IP/user logs are maintained for legal review.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">5. Revisions and Modifications</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    We reserve the right to modify these terms at any time to reflect updates in software functionality or changes in cyber crime laws. Users are encouraged to review this page periodically.
+                </p>
+            </section>
+        </article>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Back Link -->
+        <div>
+            <a href="{% url 'home' %}" class="px-6 py-2.5 bg-surface-container border border-outline text-on-surface font-bold rounded-lg no-underline hover:bg-surface-container-high transition-all">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,29 +1,252 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register Complaint</title>
-</head>
-<body>
+{% extends "users/base.html" %}
+{% block title %}Register Complaint | CyberGuard{% endblock %}
 
-<h2>Register Complaint</h2>
+{% block extra_css %}
+<style>
+    .step-transition {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    }
+    .form-progress-bar {
+        transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+</style>
+{% endblock %}
 
-<form method="POST" enctype="multipart/form-data">
+{% block main_container %}
+<main class="min-h-screen py-16 px-margin-mobile md:px-0">
+    <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-12">
+            <h1 class="font-display-lg text-display-lg text-primary mb-4">Secure Incident Reporting</h1>
+            <p class="text-on-surface-variant text-body-base max-w-2xl mx-auto">
+                Your security is our priority. Please provide detailed information about the incident. This data is encrypted and handled by our clinical response team.
+            </p>
+        </div>
+        <div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+            <div class="bg-surface-container px-8 py-6 border-b border-outline-variant">
+                <div class="flex justify-between mb-4">
+                    <span class="text-label-caps text-primary font-label-caps uppercase text-xs" id="step-indicator">Step 1 of 3: Personal Details</span>
+                    <span class="text-label-caps text-on-surface-variant font-label-caps text-xs" id="percent-indicator">33% Complete</span>
+                </div>
+                <div class="w-full bg-outline-variant h-1.5 rounded-full overflow-hidden">
+                    <div class="form-progress-bar h-full bg-primary" id="progress-bar" style="width: 33.33%"></div>
+                </div>
+            </div>
+            
+            <form class="p-8" enctype="multipart/form-data" id="complaint-form" method="POST">
+                {% csrf_token %}
+                
+                <div class="step-content space-y-6" id="step-1">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_full_name">Full Name</label>
+                            <input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_full_name" name="name" value="{{ user.first_name }} {{ user.last_name }}" placeholder="John Doe" required="" type="text"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_email">Email Address</label>
+                            <input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_email" name="email" value="{{ user.email }}" placeholder="john@example.com" required="" type="email"/>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_phone">Phone Number</label>
+                        <input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_phone" name="phone" value="{{ user.userprofile.phone_number|default:'' }}" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+                    </div>
+                </div>
+                
+                <div class="step-content hidden space-y-6" id="step-2">
+                    <div class="space-y-2">
+                        <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_complaint_title">Complaint Title</label>
+                        <input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_complaint_title" name="title" placeholder="Short summary of the issue" required="" type="text"/>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_crime_category">Crime Category</label>
+                            {{ form.case_type }}
+                        </div>
+                        <div class="space-y-2">
+                            <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_incident_location">Incident Location / IP / URL</label>
+                            <input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_incident_location" name="location" placeholder="e.g. London, UK or https://suspicious-site.com" required="" type="text"/>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-content hidden space-y-6" id="step-3">
+                    <div class="space-y-2">
+                        <label class="block text-label-caps font-label-caps text-on-surface text-xs" for="id_description">Detailed Description</label>
+                        <textarea class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none text-on-surface" id="id_description" name="description" placeholder="Describe what happened in detail..." required="" rows="4"></textarea>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-label-caps font-label-caps text-on-surface text-xs">Evidence Upload</label>
+                        <div class="border-2 border-dashed border-outline-variant rounded-xl p-8 text-center bg-surface hover:bg-surface-container-low transition-colors group cursor-pointer" id="drop-zone">
+                            <input accept="image/*,.pdf,.doc,.docx,.txt" class="hidden" id="id_evidence" name="evidence" type="file"/>
+                            <span class="material-symbols-outlined text-4xl text-outline mb-2 group-hover:text-primary transition-colors">upload_file</span>
+                            <p class="text-body-base text-on-surface-variant">Click to upload or drag and drop evidence</p>
+                            <p class="text-label-caps text-outline mt-1 text-xs">Supported: PDF, JPG, PNG, DOCX, TXT (Max 10MB)</p>
+                            <div class="mt-4 text-left space-y-2" id="file-list"></div>
+                            <div class="hidden mt-2 text-error text-sm font-bold" id="file-error"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
+                        <span class="material-symbols-outlined text-primary">info</span>
+                        <p class="text-sm text-on-surface-variant">By submitting this report, you confirm that the information provided is accurate to the best of your knowledge. False reporting is a punishable offense under cyber law.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-12 flex justify-between items-center">
+                    <button class="invisible px-6 py-3 text-primary font-bold hover:bg-surface-container-low rounded-lg transition-all flex items-center gap-2 border-0 bg-transparent cursor-pointer" id="prev-btn" type="button">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Back
+                    </button>
+                    <button class="px-8 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-all shadow-lg flex items-center gap-2 border-0 cursor-pointer" id="next-btn" type="button">
+                        Continue
+                        <span class="material-symbols-outlined">arrow_forward</span>
+                    </button>
+                    <button
+    class="hidden px-8 py-3 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 transition-all duration-300 shadow-lg shadow-emerald-500/30 flex items-center gap-2 border border-emerald-500 cursor-pointer"
+    id="submit-btn"
+    type="submit"
+>
+    Submit Report
+    <span class="material-symbols-outlined">shield_lock</span>
+</button>
+                </div>
+            </form>
+        </div>
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+                <span class="material-symbols-outlined text-primary mb-3">lock</span>
+                <h3 class="font-headline-md text-body-base font-bold mb-2 text-on-surface">End-to-End Encryption</h3>
+                <p class="text-sm text-on-surface-variant">Your report data is encrypted before it even leaves your device, ensuring total privacy during transmission.</p>
+            </div>
+            <div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+                <span class="material-symbols-outlined text-primary mb-3">speed</span>
+                <h3 class="font-headline-md text-body-base font-bold mb-2 text-on-surface">Priority Response</h3>
+                <p class="text-sm text-on-surface-variant">Incident reports are automatically categorized and routed to specialized response teams within 15 minutes.</p>
+            </div>
+            <div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+                <span class="material-symbols-outlined text-primary mb-3">verified_user</span>
+                <h3 class="font-headline-md text-body-base font-bold mb-2 text-on-surface">Legal Admissibility</h3>
+                <p class="text-sm text-on-surface-variant">Reports generated through CyberGuard adhere to strict evidentiary standards for use in legal proceedings.</p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
 
-    {% csrf_token %}
+{% block extra_js %}
+<script>
+    const steps = document.querySelectorAll('.step-content');
+    const nextBtn = document.getElementById('next-btn');
+    const prevBtn = document.getElementById('prev-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const stepIndicator = document.getElementById('step-indicator');
+    const percentIndicator = document.getElementById('percent-indicator');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('id_evidence');
+    const fileList = document.getElementById('file-list');
+    const fileError = document.getElementById('file-error');
 
-    {{ form.as_p }}
+    let currentStep = 0;
 
-    <button type="submit">
-        Submit Complaint
-    </button>
+    function updateUI() {
+        steps.forEach((step, idx) => {
+            step.classList.toggle('hidden', idx !== currentStep);
+        });
 
-</form>
+        const total = steps.length;
+        const progress = ((currentStep + 1) / total) * 100;
+        progressBar.style.width = `${progress}%`;
+        percentIndicator.innerText = `${Math.round(progress)}% Complete`;
 
-<br>
+        const stepLabels = [
+            "Personal Details",
+            "Incident Details",
+            "Description & Evidence"
+        ];
+        stepIndicator.innerText = `Step ${currentStep + 1} of ${total}: ${stepLabels[currentStep]}`;
 
-<a href="{% url 'home' %}">
-    Home
-</a>
+        prevBtn.classList.toggle('invisible', currentStep === 0);
+        
+        if (currentStep === total - 1) {
+            nextBtn.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            submitBtn.classList.add('hidden');
+        }
+    }
 
-</body>
-</html>
+    nextBtn.addEventListener('click', () => {
+        const currentInputs = steps[currentStep].querySelectorAll('input[required], select[required], textarea[required]');
+        let valid = true;
+        currentInputs.forEach(input => {
+            if (!input.value) {
+                input.classList.add('border-error');
+                valid = false;
+            } else {
+                input.classList.remove('border-error');
+            }
+        });
+
+        if (valid && currentStep < steps.length - 1) {
+            currentStep++;
+            updateUI();
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+            currentStep--;
+            updateUI();
+        }
+    });
+
+    dropZone.addEventListener('click', () => fileInput.click());
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('bg-primary/5', 'border-primary');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('bg-primary/5', 'border-primary');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('bg-primary/5', 'border-primary');
+        if (e.dataTransfer.files.length > 0) {
+            fileInput.files = e.dataTransfer.files;
+            handleFiles(e.dataTransfer.files);
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        fileList.innerHTML = '';
+        fileError.classList.add('hidden');
+        let hasError = false;
+
+        Array.from(files).forEach(file => {
+            if (file.size > 10 * 1024 * 1024) {
+                fileError.innerText = "Error: File exceeds the 10MB limit.";
+                fileError.classList.remove('hidden');
+                hasError = true;
+            } else {
+                const item = document.createElement('div');
+                item.className = 'flex items-center gap-2 p-2 bg-surface-container-low rounded border border-outline-variant text-sm text-on-surface';
+                item.innerHTML = `<span class="material-symbols-outlined text-primary">description</span> ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+                fileList.appendChild(item);
+            }
+        });
+
+        if (hasError) {
+            fileList.innerHTML = '';
+            fileInput.value = '';
+        }
+    }
+</script>
+{% endblock %}

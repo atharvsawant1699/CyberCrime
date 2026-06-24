@@ -1,0 +1,58 @@
+{% extends "users/base.html" %}
+{% block title %}Disclaimer | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block main_container %}
+<main class="py-16 px-4 md:px-8 bg-background max-w-4xl mx-auto">
+    <div class="space-y-8">
+        <!-- Header -->
+        <div>
+            <h1 class="font-display-lg text-display-lg text-on-surface font-bold">Legal Disclaimer</h1>
+            <p class="text-on-surface-variant text-body-base mt-2">
+                Last Updated: {{ RELEASE_DATE }} • Platform: {{ SOFTWARE_NAME }}
+            </p>
+        </div>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Disclaimer Body -->
+        <article class="prose max-w-none text-on-surface text-sm space-y-6">
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">1. Software Purpose</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    {{ SOFTWARE_NAME }} is designed solely as an administrative interface to log, document, and track cybercrime incidents. It does not replace emergency response channels. In critical emergencies, please contact your local law enforcement agencies or cyber patrol response centers directly.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">2. Threat Intelligence & Third-Party Feeds</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    The threat feeds (such as CISA advisories and general cyber news) displayed on this platform are aggregated from public and third-party feeds. <strong>{{ COMPANY_NAME }}</strong> and lead developer <strong>{{ DEVELOPER_NAME }}</strong> do not guarantee the completeness, accuracy, or timeliness of these feeds.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">3. Forensic Integrity Limitation</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    While {{ SOFTWARE_NAME }} utilizes secure methods to verify and preserve incident files, the ultimate legal admissibility and integrity of evidence in court remains subject to review by cyber forensic specialists and judicial authorities.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">4. System & Case Resolution</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    No guarantee is given that every reported incident will result in case resolution, retrieval of stolen assets, or apprehension of threat actors. Investigation success depends on incident details, routing, and available officer resources.
+                </p>
+            </section>
+        </article>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Back Link -->
+        <div>
+            <a href="{% url 'home' %}" class="px-6 py-2.5 bg-surface-container border border-outline text-on-surface font-bold rounded-lg no-underline hover:bg-surface-container-high transition-all">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

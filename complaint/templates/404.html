@@ -1,0 +1,30 @@
+{% extends "users/base.html" %}
+{% block title %}Page Not Found | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-16 px-4">
+    <div class="max-w-md w-full text-center bg-white border border-outline-variant rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.05)] p-8 md:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-primary"></div>
+        
+        <div class="w-20 h-20 bg-primary/10 flex items-center justify-center rounded-full mx-auto mb-6">
+            <span class="material-symbols-outlined text-primary text-4xl">search_off</span>
+        </div>
+        
+        <h1 class="font-headline-md text-[26px] font-bold text-on-surface mb-2">404 - Path Not Found</h1>
+        <p class="font-body-base text-body-base text-on-surface-variant mb-8">
+            The requested secure portal page or resource does not exist, or has been temporarily relocated.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <a href="{% url 'home' %}" class="flex-1 py-3 px-4 bg-primary text-on-primary font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all no-underline shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">home</span>
+                Go Home
+            </a>
+            <a href="{% url 'contact' %}" class="flex-1 py-3 px-4 border border-outline text-on-surface hover:bg-surface-container-low font-bold rounded-lg flex items-center justify-center gap-2 transition-all no-underline">
+                <span class="material-symbols-outlined text-[20px]">support_agent</span>
+                Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register Complaint | CyberGuard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#784b00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d7",
+                        "surface-bright": "#faf8ff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#00714d",
+                        "tertiary-container": "#996100",
+                        "secondary": "#006c49",
+                        "primary": "#004ac6",
+                        "surface-container-low": "#f3f3fe",
+                        "on-tertiary-fixed-variant": "#653e00",
+                        "surface-dim": "#d9d9e5",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb95f",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "tertiary-fixed": "#ffddb8",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#002113",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container-highest": "#e1e2ed",
+                        "surface-tint": "#0053db",
+                        "on-surface": "#191b23",
+                        "on-primary-container": "#eeefff",
+                        "surface": "#faf8ff",
+                        "on-surface-variant": "#434655",
+                        "inverse-primary": "#b4c5ff",
+                        "inverse-surface": "#2e3039",
+                        "outline": "#737686",
+                        "surface-container": "#ededf9",
+                        "secondary-fixed-dim": "#4edea3",
+                        "surface-container-high": "#e7e7f3",
+                        "on-error": "#ffffff",
+                        "inverse-on-surface": "#f0f0fb",
+                        "secondary-fixed": "#6ffbbe",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#ffeedd",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#6cf8bb",
+                        "surface-variant": "#e1e2ed",
+                        "primary-fixed": "#dbe1ff",
+                        "on-secondary-fixed-variant": "#005236",
+                        "on-background": "#191b23",
+                        "on-tertiary-fixed": "#2a1700"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "8px",
+                        "margin-desktop": "32px",
+                        "container-max": "1280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Outfit"],
+                        "label-caps": ["Outfit"],
+                        "headline-md": ["Outfit"],
+                        "display-lg-mobile": ["Outfit"],
+                        "mono-data": ["JetBrains Mono"],
+                        "body-base": ["Outfit"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "mono-data": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-transition {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        }
+        .form-progress-bar {
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased">
+<!-- Top Navigation Bar -->
+<header class="bg-surface border-b border-outline-variant docked full-width top-0 sticky z-50">
+<nav class="flex justify-between items-center w-full px-margin-desktop max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-8">
+<span class="text-headline-md font-headline-md text-primary">CyberGuard</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Home</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Register Complaint</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Track Complaints</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Portal</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">Threat Intelligence</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 text-primary font-bold hover:bg-surface-container-low transition-colors duration-200">Login</button>
+<button class="px-6 py-2 bg-primary text-on-primary rounded-lg font-bold hover:opacity-80 transition-all duration-150">Signup</button>
+</div>
+</nav>
+</header>
+<main class="min-h-screen py-16 px-margin-mobile md:px-0">
+<div class="max-w-4xl mx-auto">
+<!-- Header Section -->
+<div class="text-center mb-12">
+<h1 class="font-display-lg text-display-lg text-primary mb-4">Secure Incident Reporting</h1>
+<p class="text-on-surface-variant text-body-base max-w-2xl mx-auto">
+                    Your security is our priority. Please provide detailed information about the incident. This data is encrypted and handled by our clinical response team.
+                </p>
+</div>
+<!-- Multi-step Container -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+<!-- Progress Header -->
+<div class="bg-surface-container px-8 py-6 border-b border-outline-variant">
+<div class="flex justify-between mb-4">
+<span class="text-label-caps text-primary font-label-caps uppercase" id="step-indicator">Step 1 of 3: Personal Details</span>
+<span class="text-label-caps text-on-surface-variant font-label-caps" id="percent-indicator">33% Complete</span>
+</div>
+<div class="w-full bg-outline-variant h-1.5 rounded-full overflow-hidden">
+<div class="form-progress-bar h-full bg-primary" id="progress-bar" style="width: 33.33%"></div>
+</div>
+</div>
+<form class="p-8" enctype="multipart/form-data" id="complaint-form" method="POST">
+<!-- CSRF Token Placeholder -->
+<input name="csrfmiddlewaretoken" type="hidden" value="dummy_token_for_ui_design"/>
+<!-- Step 1: Personal Info -->
+<div class="step-content space-y-6" id="step-1">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_full_name">Full Name</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_full_name" name="full_name" placeholder="John Doe" required="" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_email">Email Address</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_email" name="email" placeholder="john@example.com" required="" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_phone">Phone Number</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_phone" name="phone" placeholder="+1 (555) 000-0000" required="" type="tel"/>
+</div>
+</div>
+<!-- Step 2: Incident Details -->
+<div class="step-content hidden space-y-6" id="step-2">
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_complaint_title">Complaint Title</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_complaint_title" name="complaint_title" placeholder="Short summary of the issue" required="" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_crime_category">Crime Category</label>
+<select class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none appearance-none" id="id_crime_category" name="crime_category" required="">
+<option value="">Select Category</option>
+<option value="phishing">Phishing / Social Engineering</option>
+<option value="identity_theft">Identity Theft</option>
+<option value="financial_fraud">Financial Fraud</option>
+<option value="ransomware">Ransomware / Malware</option>
+<option value="harassment">Cyber Harassment</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_incident_date">Incident Date</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_incident_date" name="incident_date" required="" type="date"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_incident_location">Incident Location / IP / URL</label>
+<input class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_incident_location" name="incident_location" placeholder="e.g. London, UK or https://suspicious-site.com" type="text"/>
+</div>
+</div>
+<!-- Step 3: Description & Evidence -->
+<div class="step-content hidden space-y-6" id="step-3">
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface" for="id_description">Detailed Description</label>
+<textarea class="w-full bg-surface border border-outline rounded-lg px-4 py-3 focus:ring-4 focus:ring-primary/20 focus:border-primary transition-all outline-none" id="id_description" name="description" placeholder="Describe what happened in detail..." required="" rows="4"></textarea>
+</div>
+<div class="space-y-2">
+<label class="block text-label-caps font-label-caps text-on-surface">Evidence Upload</label>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-8 text-center bg-surface hover:bg-surface-container-low transition-colors group cursor-pointer" id="drop-zone">
+<input accept="image/*,.pdf,.doc,.docx" class="hidden" id="id_evidence" multiple="" name="evidence" type="file"/>
+<span class="material-symbols-outlined text-4xl text-outline mb-2 group-hover:text-primary transition-colors">upload_file</span>
+<p class="text-body-base text-on-surface-variant">Click to upload or drag and drop evidence</p>
+<p class="text-label-caps text-outline mt-1">Supported: PDF, JPG, PNG (Max 10MB)</p>
+<div class="mt-4 text-left space-y-2" id="file-list"></div>
+<div class="hidden mt-2 text-error text-sm font-bold" id="file-error"></div>
+</div>
+</div>
+<div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="text-sm text-on-surface-variant">By submitting this report, you confirm that the information provided is accurate to the best of your knowledge. False reporting is a punishable offense under cyber law.</p>
+</div>
+</div>
+<!-- Navigation Controls -->
+<div class="mt-12 flex justify-between items-center">
+<button class="invisible px-6 py-3 text-primary font-bold hover:bg-surface-container-low rounded-lg transition-all flex items-center gap-2" id="prev-btn" type="button">
+<span class="material-symbols-outlined">arrow_back</span>
+                            Back
+                        </button>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-lg font-bold hover:opacity-90 transition-all shadow-lg flex items-center gap-2" id="next-btn" type="button">
+                            Continue
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="hidden px-8 py-3 bg-secondary text-on-secondary rounded-lg font-bold hover:opacity-90 transition-all shadow-lg flex items-center gap-2" id="submit-btn" type="submit">
+                            Submit Report
+                            <span class="material-symbols-outlined">shield_lock</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Information Sidebar/Bottom Grid -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-3">lock</span>
+<h3 class="font-headline-md text-body-base font-bold mb-2">End-to-End Encryption</h3>
+<p class="text-sm text-on-surface-variant">Your report data is encrypted before it even leaves your device, ensuring total privacy during transmission.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-3">speed</span>
+<h3 class="font-headline-md text-body-base font-bold mb-2">Priority Response</h3>
+<p class="text-sm text-on-surface-variant">Incident reports are automatically categorized and routed to specialized response teams within 15 minutes.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl border border-outline-variant">
+<span class="material-symbols-outlined text-primary mb-3">verified_user</span>
+<h3 class="font-headline-md text-body-base font-bold mb-2">Legal Admissibility</h3>
+<p class="text-sm text-on-surface-variant">Reports generated through CyberGuard adhere to strict evidentiary standards for use in legal proceedings.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant mt-24">
+<div class="flex flex-col md:flex-row justify-between items-center w-full py-8 px-margin-desktop max-w-container-max mx-auto">
+<span class="text-label-caps font-label-caps text-on-surface mb-4 md:mb-0">CyberGuard</span>
+<p class="text-body-base text-on-surface-variant text-center md:text-left mb-4 md:mb-0">© 2024 CyberGuard Intelligence Core. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+<script>
+        const form = document.getElementById('complaint-form');
+        const steps = document.querySelectorAll('.step-content');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const stepIndicator = document.getElementById('step-indicator');
+        const percentIndicator = document.getElementById('percent-indicator');
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('id_evidence');
+        const fileList = document.getElementById('file-list');
+        const fileError = document.getElementById('file-error');
+
+        let currentStep = 0;
+
+        function updateUI() {
+            steps.forEach((step, idx) => {
+                step.classList.toggle('hidden', idx !== currentStep);
+                if (idx === currentStep) {
+                    step.classList.add('opacity-0', 'translate-y-4');
+                    setTimeout(() => {
+                        step.classList.remove('opacity-0', 'translate-y-4');
+                        step.classList.add('step-transition');
+                    }, 50);
+                }
+            });
+
+            const total = steps.length;
+            const progress = ((currentStep + 1) / total) * 100;
+            progressBar.style.width = `${progress}%`;
+            percentIndicator.innerText = `${Math.round(progress)}% Complete`;
+
+            const stepLabels = [
+                "Personal Details",
+                "Incident Details",
+                "Description & Evidence"
+            ];
+            stepIndicator.innerText = `Step ${currentStep + 1} of ${total}: ${stepLabels[currentStep]}`;
+
+            prevBtn.classList.toggle('invisible', currentStep === 0);
+            
+            if (currentStep === total - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            // Basic validation for required fields in current step
+            const currentInputs = steps[currentStep].querySelectorAll('input[required], select[required], textarea[required]');
+            let valid = true;
+            currentInputs.forEach(input => {
+                if (!input.value) {
+                    input.classList.add('border-error');
+                    valid = false;
+                } else {
+                    input.classList.remove('border-error');
+                }
+            });
+
+            if (valid && currentStep < steps.length - 1) {
+                currentStep++;
+                updateUI();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateUI();
+            }
+        });
+
+        // File handling
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('bg-primary/5', 'border-primary');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('bg-primary/5', 'border-primary');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('bg-primary/5', 'border-primary');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            fileList.innerHTML = '';
+            fileError.classList.add('hidden');
+            let hasError = false;
+
+            Array.from(files).forEach(file => {
+                if (file.size > 10 * 1024 * 1024) {
+                    fileError.innerText = "Error: One or more files exceed the 10MB limit.";
+                    fileError.classList.remove('hidden');
+                    hasError = true;
+                } else {
+                    const item = document.createElement('div');
+                    item.className = 'flex items-center gap-2 p-2 bg-surface-container-low rounded border border-outline-variant text-sm';
+                    item.innerHTML = `<span class="material-symbols-outlined text-primary">description</span> ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+                    fileList.appendChild(item);
+                }
+            });
+
+            if (hasError) fileList.innerHTML = '';
+        }
+
+        form.addEventListener('submit', (e) => {
+            // Actual Django submission would happen here
+            console.log("Form submitted via CSRF-protected endpoint");
+        });
+    </script>
+</body></html>

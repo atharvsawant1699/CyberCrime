@@ -1,0 +1,496 @@
+{% extends "users/base.html" %}
+{% block title %}Admin Control Center | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .glass-sidebar {
+        background: rgba(250, 248, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border-right: 1px solid #c3c6d7;
+    }
+    .active-nav-item {
+        background-color: #10b981;
+        color: #ffffff;
+    }
+    .stats-card {
+        box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid #10b981;
+    }
+    .form-control, select, textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: #f3f3fe;
+        border: 1px solid #c3c6d7;
+        border-radius: 0.5rem;
+        outline: none;
+        transition: all 0.2s;
+        color: #191b23;
+    }
+    .form-control:focus, select:focus, textarea:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+    }
+</style>
+{% endblock %}
+
+{% block main_container %}
+<div class="flex flex-1 min-h-screen">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 glass-sidebar hidden md:flex flex-col py-8 px-4 gap-2 text-on-surface">
+        <div class="mb-8 px-4 text-label-caps text-on-surface-variant uppercase tracking-widest opacity-60 text-xs">Admin Controls</div>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item shadow-sm text-white no-underline" href="{% url 'admin_dashboard' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body-base">Command Center</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="{% url 'officer' %}">
+            <span class="material-symbols-outlined">shield_person</span>
+            <span class="font-body-base">Officer Queue</span>
+        </a>
+        <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="/admin/">
+            <span class="material-symbols-outlined">settings_suggest</span>
+            <span class="font-body-base">Django Admin</span>
+        </a>
+        
+        <div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-2">
+            <div class="flex items-center gap-3 px-4 py-3">
+                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-bold">
+                    A
+                </div>
+                <div>
+                    <p class="text-sm font-bold text-on-surface">{{ user.username }}</p>
+                    <p class="text-xs text-on-surface-variant">Administrator</p>
+                </div>
+            </div>
+            <div class="px-4 py-2 text-[10px] text-on-surface-variant/80 font-mono-data border-t border-outline-variant/30 space-y-0.5">
+                <div>{{ SOFTWARE_NAME }} {{ SOFTWARE_VERSION }}</div>
+                <div>Build: {{ BUILD_NUMBER }}</div>
+                <div>&copy; {{ COPYRIGHT_YEAR }} {{ COMPANY_NAME }}</div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-grow flex-1 overflow-y-auto bg-background p-6 md:p-8 text-on-surface">
+        <div class="max-w-6xl mx-auto">
+            <!-- Mobile Dashboard Navigation (Accordion) -->
+            <div class="block md:hidden mb-6 bg-surface-container-low rounded-xl border border-outline-variant p-4">
+                <button class="w-full flex justify-between items-center text-sm font-bold text-on-surface-variant focus:outline-none bg-transparent border-0 cursor-pointer" onclick="toggleMobileSidebar()">
+                    <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">menu_open</span>
+                        Admin Console Menu
+                    </span>
+                    <span class="material-symbols-outlined transition-transform duration-200" id="sidebarChevron">expand_more</span>
+                </button>
+                <div class="hidden flex-col gap-2 mt-4" id="mobileSidebarLinks">
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg active-nav-item shadow-sm text-white no-underline" href="{% url 'admin_dashboard' %}">
+                        <span class="material-symbols-outlined">dashboard</span>
+                        <span class="font-body-base">Command Center</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="{% url 'officer' %}">
+                        <span class="material-symbols-outlined">shield_person</span>
+                        <span class="font-body-base">Officer Queue</span>
+                    </a>
+                    <a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container-low transition-colors no-underline" href="/admin/">
+                        <span class="material-symbols-outlined">settings_suggest</span>
+                        <span class="font-body-base">Django Admin</span>
+                    </a>
+                </div>
+            </div>
+            <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[11px] font-mono-data font-bold">{{ SOFTWARE_NAME }} Console</span>
+                        <span class="text-xs text-on-surface-variant font-mono-data">{{ SOFTWARE_VERSION }}-b{{ BUILD_NUMBER }}</span>
+                    </div>
+                    <h1 class="font-display-lg text-display-lg text-on-surface font-bold">{{ SOFTWARE_NAME }} Command Center</h1>
+                    <p class="text-on-surface-variant font-body-base">Configure auto-allocation mappings, manage officer deployment, and monitor critical incidents under ownership of {{ COMPANY_NAME }}.</p>
+                </div>
+            </header>
+
+            <!-- Metrics Bento Grid -->
+            <section class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8">
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #2563eb;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Total Cases</p>
+                    <h3 class="text-2xl font-bold text-primary">{{ stats.total_cases }}</h3>
+                </div>
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #f59e0b;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Pending</p>
+                    <h3 class="text-2xl font-bold text-amber-500">{{ stats.pending_cases }}</h3>
+                </div>
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #06b6d4;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Assigned</p>
+                    <h3 class="text-2xl font-bold text-cyan-500">{{ stats.assigned_cases }}</h3>
+                </div>
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #6366f1;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Investigating</p>
+                    <h3 class="text-2xl font-bold text-indigo-500">{{ stats.investigating_cases }}</h3>
+                </div>
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #10b981;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Resolved</p>
+                    <h3 class="text-2xl font-bold text-emerald-500">{{ stats.resolved_cases }}</h3>
+                </div>
+                <div class="stats-card bg-surface p-4 rounded-xl border border-outline-variant" style="border-left-color: #10b981;">
+                    <p class="text-label-caps text-on-surface-variant mb-1 text-[11px] uppercase">Active Officers</p>
+                    <h3 class="text-2xl font-bold text-emerald-500">{{ stats.available_officers }}</h3>
+                </div>
+            </section>
+
+            <!-- Admin Section Tabs -->
+            <div class="mb-6 border-b border-outline-variant">
+                <nav class="flex gap-6" id="adminTabs">
+                    <button class="pb-3 text-sm font-bold border-b-2 border-emerald-500 text-emerald-600 focus:outline-none cursor-pointer bg-transparent border-t-0 border-x-0" onclick="switchTab('complaints-tab')">Complaints Management</button>
+                    <button class="pb-3 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-emerald-500 focus:outline-none cursor-pointer bg-transparent border-t-0 border-x-0" onclick="switchTab('officers-tab')">Officer Deployment</button>
+                    <button class="pb-3 text-sm font-bold border-b-2 border-transparent text-on-surface-variant hover:text-emerald-500 focus:outline-none cursor-pointer bg-transparent border-t-0 border-x-0" onclick="switchTab('allocation-tab')">Allocation Mappings</button>
+                </nav>
+            </div>
+
+            <!-- Tab 1: Complaints Management -->
+            <div id="complaints-tab" class="tab-content">
+                <div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+                    <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                        <h2 class="font-headline-md text-on-surface font-bold">Complaints / Case Registry</h2>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+                            <input id="searchCases" onkeyup="filterCases()" class="pl-10 pr-4 py-2 border border-outline-variant rounded-lg bg-surface focus:ring-2 focus:ring-emerald-500 focus:outline-none transition-all w-64 text-on-surface" placeholder="Search case ID or details..." type="text"/>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left" id="casesTable">
+                            <thead>
+                                <tr class="bg-surface-container-lowest border-b border-outline-variant text-on-surface-variant text-xs font-bold">
+                                    <th class="px-6 py-4 font-label-caps">Case ID</th>
+                                    <th class="px-6 py-4 font-label-caps">Complaint Title</th>
+                                    <th class="px-6 py-4 font-label-caps">Priority</th>
+                                    <th class="px-6 py-4 font-label-caps">Status</th>
+                                    <th class="px-6 py-4 font-label-caps">Assigned Officer</th>
+                                    <th class="px-6 py-4 font-label-caps text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant text-on-surface">
+                                {% for complaint in complaints %}
+                                <tr class="hover:bg-surface-container-lowest transition-colors case-row" data-id="{{ complaint.complaint_id }}" data-citizen="{{ complaint.title }}">
+                                    <td class="px-6 py-4 font-mono-data text-emerald-600">
+                                        <a href="{% url 'case_detail' complaint.complaint_id %}" class="no-underline text-emerald-600 font-bold hover:underline">#{{ complaint.complaint_id }}</a>
+                                    </td>
+                                    <td class="px-6 py-4 font-body-base font-bold">{{ complaint.title }}</td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase
+                                            {% if complaint.priority == 'High' %}bg-rose-100 text-rose-800
+                                            {% elif complaint.priority == 'Medium' %}bg-amber-100 text-amber-800
+                                            {% else %}bg-sky-100 text-sky-800{% endif %}">
+                                            {{ complaint.priority }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2 py-0.5 rounded-full text-xs font-bold uppercase
+                                            {% if complaint.status == 'Pending' %}bg-amber-100 text-amber-800
+                                            {% elif complaint.status == 'Assigned' %}bg-sky-100 text-sky-800
+                                            {% elif complaint.status == 'Resolved' %}bg-emerald-100 text-emerald-800
+                                            {% else %}bg-indigo-100 text-indigo-800{% endif %}">
+                                            {{ complaint.status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 font-body-base text-sm">
+                                        {% if complaint.assigned_officer %}
+                                            <span class="font-bold text-on-surface">{{ complaint.assigned_officer.full_name }}</span>
+                                        {% else %}
+                                            <span class="text-amber-600 italic">Unassigned</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end gap-2">
+                                            <a href="{% url 'case_detail' complaint.complaint_id %}" class="px-3 py-1.5 bg-surface-container border border-outline text-on-surface no-underline rounded-lg text-xs font-bold hover:bg-surface-container-high transition-colors">Details</a>
+                                            <button class="px-3 py-1.5 bg-emerald-500 text-white border-0 rounded-lg text-xs font-bold hover:opacity-90 transition-all cursor-pointer" onclick="openReassignModal('{{ complaint.complaint_id }}', '{{ complaint.assigned_officer.id|default:'' }}', '{{ complaint.assigned_officer.full_name|default:'Unassigned' }}')">Reassign</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">No cases logged in system.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Officer Deployment -->
+            <div id="officers-tab" class="tab-content hidden">
+                <div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+                    <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                        <h2 class="font-headline-md text-on-surface font-bold">Officer Roster & Status</h2>
+                        <a href="/admin/complaint/officer/add/" class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold hover:opacity-90 no-underline shadow-sm">Add Officer</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-surface-container-lowest border-b border-outline-variant text-on-surface-variant text-xs font-bold">
+                                    <th class="px-6 py-4 font-label-caps">Officer ID</th>
+                                    <th class="px-6 py-4 font-label-caps">Full Name</th>
+                                    <th class="px-6 py-4 font-label-caps">Department & Rank</th>
+                                    <th class="px-6 py-4 font-label-caps">Specialization</th>
+                                    <th class="px-6 py-4 font-label-caps">Availability</th>
+                                    <th class="px-6 py-4 font-label-caps text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant text-on-surface">
+                                {% for officer in officers %}
+                                <tr>
+                                    <td class="px-6 py-4 font-mono-data text-xs">{{ officer.officer_id }}</td>
+                                    <td class="px-6 py-4 font-body-base font-bold">{{ officer.full_name }}</td>
+                                    <td class="px-6 py-4 text-sm">{{ officer.rank }} | {{ officer.department }}</td>
+                                    <td class="px-6 py-4 font-bold text-primary text-sm">{{ officer.specialization }}</td>
+                                    <td class="px-6 py-4">
+                                        {% if officer.availability_status %}
+                                            <span class="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold uppercase">Available</span>
+                                        {% else %}
+                                            <span class="px-2.5 py-0.5 bg-slate-200 text-slate-700 rounded-full text-xs font-bold uppercase">Unavailable</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end gap-2 items-center">
+                                            <a href="{% url 'toggle_officer_availability' officer.id %}" class="px-2.5 py-1 text-xs border border-outline rounded-lg text-on-surface font-bold hover:bg-surface-container-low transition-colors no-underline">
+                                                {% if officer.availability_status %}Disable{% else %}Enable{% endif %}
+                                            </a>
+                                            <button onclick="openSpecializationModal('{{ officer.id }}', '{{ officer.full_name }}', '{{ officer.specialization }}')" class="px-2.5 py-1 text-xs bg-emerald-500 text-white rounded-lg font-bold border-0 hover:opacity-90 transition-all cursor-pointer">Spec</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-on-surface-variant">No officers registered.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Case Allocation Mappings -->
+            <div id="allocation-tab" class="tab-content hidden">
+                <div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+                    <div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+                        <h2 class="font-headline-md text-on-surface font-bold">Automatic Case Allocation Mappings</h2>
+                        <a href="/admin/complaint/casetype/add/" class="px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold hover:opacity-90 no-underline shadow-sm">Create Case Type</a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="bg-surface-container-lowest border-b border-outline-variant text-on-surface-variant text-xs font-bold">
+                                    <th class="px-6 py-4 font-label-caps">Case Type / Category Name</th>
+                                    <th class="px-6 py-4 font-label-caps">Mapped Officer (Primary routing)</th>
+                                    <th class="px-6 py-4 font-label-caps">Priority Level</th>
+                                    <th class="px-6 py-4 font-label-caps">Active Status</th>
+                                    <th class="px-6 py-4 font-label-caps text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant text-on-surface">
+                                {% for case_type in case_types %}
+                                <tr>
+                                    <td class="px-6 py-4 font-body-base font-bold">{{ case_type.name }}</td>
+                                    <td class="px-6 py-4">
+                                        {% if case_type.assigned_officer %}
+                                            <span class="font-bold text-on-surface">{{ case_type.assigned_officer.full_name }}</span>
+                                            <p class="text-xs text-on-surface-variant">Badge: {{ case_type.assigned_officer.badge_number }}</p>
+                                        {% else %}
+                                            <span class="text-rose-500 italic font-bold">No Mapped Officer (Manual allocation)</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase
+                                            {% if case_type.priority_level == 'High' %}bg-rose-100 text-rose-800
+                                            {% elif case_type.priority_level == 'Medium' %}bg-amber-100 text-amber-800
+                                            {% else %}bg-sky-100 text-sky-800{% endif %}">
+                                            {{ case_type.priority_level }}
+                                        </span>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm font-bold">
+                                        {% if case_type.active_status %}
+                                            <span class="text-emerald-600 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>Active</span>
+                                        {% else %}
+                                            <span class="text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <a href="/admin/complaint/casetype/{{ case_type.id }}/change/" class="px-3 py-1.5 bg-surface-container border border-outline text-on-surface rounded-lg text-xs font-bold hover:bg-surface-container-high transition-colors no-underline">Edit Rules</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="px-6 py-8 text-center text-on-surface-variant">No case types defined.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Modal for Reassigning Cases -->
+<div class="hidden fixed inset-0 z-[100] overflow-y-auto items-center justify-center p-4" id="reassignModal">
+    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeReassignModal()"></div>
+    <div class="relative bg-surface rounded-xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-outline-variant z-10 text-on-surface">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-md text-on-surface font-bold">Reassign Officer</h3>
+            <button class="text-on-surface-variant hover:text-on-surface border-0 bg-transparent cursor-pointer" onclick="closeReassignModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form method="POST" action="{% url 'reassign_case' %}" class="flex flex-col gap-5">
+            {% csrf_token %}
+            <input id="reassignCaseId" name="complaint_id" type="hidden"/>
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase">Selected Case</label>
+                <div class="px-4 py-3 bg-surface-container rounded-lg font-mono-data text-emerald-600 font-bold" id="displayCaseId">#CYB10000</div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase">Current Investigator</label>
+                <div class="px-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg text-on-surface text-sm" id="displayCurrentOfficer">Officer Amit</div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase" for="officer_id">Assign New Officer</label>
+                <select class="w-full text-sm" id="officer_id" name="officer_id">
+                    <option value="">-- Unassigned --</option>
+                    {% for officer in officers %}
+                        <option value="{{ officer.id }}">{{ officer.full_name }} (Spec: {{ officer.specialization }}) {% if not officer.availability_status %}[Unavailable]{% endif %}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase" for="reason">Reason for Reassignment</label>
+                <textarea class="w-full text-sm" id="reason" name="reason" placeholder="e.g. Workload Distribution, Specialization Match..." rows="3" required></textarea>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-colors cursor-pointer bg-transparent" onclick="closeReassignModal()" type="button">Cancel</button>
+                <button class="flex-1 py-3 bg-emerald-500 text-white rounded-lg font-bold hover:opacity-90 shadow-lg transition-all cursor-pointer border-0" type="submit">Confirm Reassign</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for Editing Specialization -->
+<div class="hidden fixed inset-0 z-[100] overflow-y-auto items-center justify-center p-4" id="specializationModal">
+    <div class="absolute inset-0 bg-on-surface/40 backdrop-blur-sm" onclick="closeSpecializationModal()"></div>
+    <div class="relative bg-surface rounded-xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-outline-variant z-10 text-on-surface">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-headline-md text-on-surface font-bold">Update Specialization</h3>
+            <button class="text-on-surface-variant hover:text-on-surface border-0 bg-transparent cursor-pointer" onclick="closeSpecializationModal()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form method="POST" id="specForm" class="flex flex-col gap-5">
+            {% csrf_token %}
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase">Officer Name</label>
+                <div class="px-4 py-3 bg-surface-container rounded-lg font-bold text-on-surface" id="displayOfficerName">Officer Name</div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <label class="font-label-caps text-on-surface-variant text-[11px] uppercase" for="specialization">Primary Specialization</label>
+                <select class="w-full text-sm" id="specialization" name="specialization">
+                    {% for key, val in specialization_choices %}
+                        <option value="{{ key }}">{{ val }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="flex gap-4 pt-4">
+                <button class="flex-1 py-3 border border-outline text-on-surface rounded-lg font-bold hover:bg-surface-container transition-colors cursor-pointer bg-transparent" onclick="closeSpecializationModal()" type="button">Cancel</button>
+                <button class="flex-1 py-3 bg-emerald-500 text-white rounded-lg font-bold hover:opacity-90 shadow-lg transition-all cursor-pointer border-0" type="submit">Update Specialization</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleMobileSidebar() {
+        const links = document.getElementById('mobileSidebarLinks');
+        const chevron = document.getElementById('sidebarChevron');
+        if (links.classList.contains('hidden')) {
+            links.classList.remove('hidden');
+            links.classList.add('flex');
+            chevron.style.transform = 'rotate(180deg)';
+        } else {
+            links.classList.add('hidden');
+            links.classList.remove('flex');
+            chevron.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.getElementById(tabId).classList.remove('hidden');
+        
+        const tabs = document.querySelectorAll('#adminTabs button');
+        tabs.forEach(tab => {
+            tab.classList.remove('border-emerald-500', 'text-emerald-600');
+            tab.classList.add('border-transparent', 'text-on-surface-variant');
+        });
+        
+        const activeTab = event.currentTarget;
+        activeTab.classList.remove('border-transparent', 'text-on-surface-variant');
+        activeTab.classList.add('border-emerald-500', 'text-emerald-600');
+    }
+
+    function openReassignModal(caseId, officerId, officerName) {
+        document.getElementById('reassignModal').classList.remove('hidden');
+        document.getElementById('reassignModal').classList.add('flex');
+        document.getElementById('reassignCaseId').value = caseId;
+        document.getElementById('displayCaseId').innerText = '#' + caseId;
+        document.getElementById('displayCurrentOfficer').innerText = officerName;
+        
+        const select = document.getElementById('officer_id');
+        select.value = officerId;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeReassignModal() {
+        document.getElementById('reassignModal').classList.add('hidden');
+        document.getElementById('reassignModal').classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    function openSpecializationModal(officerId, officerName, currentSpec) {
+        document.getElementById('specializationModal').classList.remove('hidden');
+        document.getElementById('specializationModal').classList.add('flex');
+        document.getElementById('displayOfficerName').innerText = officerName;
+        document.getElementById('specialization').value = currentSpec;
+        
+        const form = document.getElementById('specForm');
+        form.action = `/admin-dashboard/officer-specialization/${officerId}/`;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSpecializationModal() {
+        document.getElementById('specializationModal').classList.add('hidden');
+        document.getElementById('specializationModal').classList.remove('flex');
+        document.body.style.overflow = 'auto';
+    }
+
+    window.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeReassignModal();
+            closeSpecializationModal();
+        }
+    });
+
+    function filterCases() {
+        const query = document.getElementById('searchCases').value.toLowerCase();
+        const rows = document.querySelectorAll('.case-row');
+        rows.forEach(row => {
+            const id = row.getAttribute('data-id').toLowerCase();
+            const citizen = row.getAttribute('data-citizen').toLowerCase();
+            if (id.includes(query) || citizen.includes(query)) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    }
+</script>
+{% endblock %}

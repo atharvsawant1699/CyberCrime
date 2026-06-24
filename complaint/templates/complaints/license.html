@@ -1,0 +1,82 @@
+{% extends "users/base.html" %}
+{% block title %}Software License | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block main_container %}
+<main class="py-16 px-4 md:px-8 bg-background max-w-4xl mx-auto">
+    <div class="space-y-8">
+        <!-- Header -->
+        <div>
+            <h1 class="font-display-lg text-display-lg text-on-surface font-bold">End-User Software License Agreement</h1>
+            <p class="text-on-surface-variant text-body-base mt-2">
+                Last Updated: {{ RELEASE_DATE }} • Platform: {{ SOFTWARE_NAME }}
+            </p>
+        </div>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- License Body -->
+        <article class="prose max-w-none text-on-surface text-sm space-y-6">
+            <section class="bg-surface-container-low border border-outline-variant p-6 rounded-xl space-y-2">
+                <h3 class="font-bold text-on-surface">Licensing & Ownership Identity</h3>
+                <p class="text-on-surface-variant text-xs">
+                    This software product is designed, owned, and distributed under the authority of:<br/>
+                    <strong>Company:</strong> {{ COMPANY_NAME }}<br/>
+                    <strong>Lead Developer:</strong> {{ DEVELOPER_NAME }}<br/>
+                    <strong>Copyright:</strong> © {{ COPYRIGHT_YEAR }} {{ COMPANY_NAME }}. All Rights Reserved.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">1. Authorized Usage</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    This Software License Agreement governs your use of the {{ SOFTWARE_NAME }} platform. Authorized use is restricted strictly to registered citizens for incident reporting, and authorized law enforcement/cybersecurity officers for official investigation operations. Any unauthorized access, testing, or usage is strictly prohibited.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">2. Ownership & Intellectual Property</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    {{ SOFTWARE_NAME }} is licensed, not sold. All rights, title, and interest in and to the software, including all copyrights, patents, trade secrets, trademarks, and other intellectual property rights, are and shall remain the exclusive property of <strong>{{ COMPANY_NAME }}</strong> and lead developer <strong>{{ DEVELOPER_NAME }}</strong>.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">3. Modification & Reverse Engineering Restrictions</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Users and licensees may not decompile, reverse engineer, disassemble, modify, adapt, translate, or create derivative works based on the software, nor attempt to bypass or disable any encryption or security verification mechanisms without explicit written consent from the copyright owners.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">4. Distribution & Deployment Terms</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    Redistribution, commercial leasing, white-labeling, or sub-licensing of this platform, whether modified or unmodified, is prohibited without obtaining a valid commercial or governmental distribution license from <strong>{{ COMPANY_NAME }}</strong>.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">5. Warranty Disclaimer</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE DEVELOPERS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
+                </p>
+            </section>
+
+            <section class="space-y-3">
+                <h3 class="font-bold text-on-surface text-base">6. Liability Limitations</h3>
+                <p class="text-on-surface-variant leading-relaxed">
+                    In no event shall {{ COMPANY_NAME }}, its lead developers, or officers be liable for any direct, indirect, special, incidental, or consequential damages (including loss of data, revenue, or forensic records) arising out of the use or inability to use the software.
+                </p>
+            </section>
+        </article>
+
+        <hr class="border-outline-variant"/>
+
+        <!-- Back Link -->
+        <div>
+            <a href="{% url 'home' %}" class="px-6 py-2.5 bg-surface-container border border-outline text-on-surface font-bold rounded-lg no-underline hover:bg-surface-container-high transition-all">
+                Return to Home
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

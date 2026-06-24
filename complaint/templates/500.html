@@ -1,0 +1,36 @@
+{% extends "users/base.html" %}
+{% block title %}System Failure | {{ SOFTWARE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center py-16 px-4">
+    <div class="max-w-md w-full text-center bg-white border border-outline-variant rounded-xl shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.05)] p-8 md:p-10 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-amber-600"></div>
+        
+        <div class="w-20 h-20 bg-amber-500/10 flex items-center justify-center rounded-full mx-auto mb-6">
+            <span class="material-symbols-outlined text-amber-600 text-4xl">settings_suggest</span>
+        </div>
+        
+        <h1 class="font-headline-md text-[24px] font-bold text-on-surface mb-2">500 - Server Exception</h1>
+        <p class="font-body-base text-body-base text-on-surface-variant mb-6">
+            An unexpected error occurred while processing your request. The security core has intercepted this event and logged it for diagnostic review.
+        </p>
+
+        <div class="mb-6 p-4 bg-surface-container border border-outline-variant/50 rounded-lg text-on-surface-variant text-xs text-left font-mono-data space-y-1">
+            <div class="font-bold text-on-surface">Diagnostic Code:</div>
+            <div>CG-ERR-500-INTERNAL</div>
+            <div class="opacity-75">Status: Incident Logged</div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+            <a href="{% url 'home' %}" class="flex-1 py-3 px-4 bg-primary text-on-primary font-bold rounded-lg flex items-center justify-center gap-2 hover:opacity-90 transition-all no-underline shadow-sm">
+                <span class="material-symbols-outlined text-[20px]">home</span>
+                Go Home
+            </a>
+            <a href="{% url 'contact' %}" class="flex-1 py-3 px-4 border border-outline text-on-surface hover:bg-surface-container-low font-bold rounded-lg flex items-center justify-center gap-2 transition-all no-underline">
+                <span class="material-symbols-outlined text-[20px]">support_agent</span>
+                Contact Support
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

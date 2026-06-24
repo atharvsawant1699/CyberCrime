@@ -1,0 +1,252 @@
+{% extends "users/base.html" %}
+{% block title %}Case Details #{{ complaint.complaint_id }} | CyberGuard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cyber-card {
+        background: #0f172a;
+        border: 1px solid #10b981;
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
+    }
+    .timeline-node {
+        border-color: #10b981;
+    }
+    .timeline-node-active {
+        background-color: #10b981;
+        box-shadow: 0 0 10px #10b981;
+    }
+</style>
+{% endblock %}
+
+{% block main_container %}
+<main class="min-h-screen py-12 px-4 md:px-8 bg-background">
+    <div class="max-w-5xl mx-auto">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="{% if is_admin %}{% url 'admin_dashboard' %}{% elif is_assigned_officer %}{% url 'officer' %}{% else %}{% url 'complaints' %}{% endif %}" class="flex items-center gap-2 text-primary hover:text-primary/80 font-bold no-underline transition-colors w-fit">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Header Card -->
+        <div class="cyber-card text-white p-6 md:p-8 rounded-2xl mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-mono font-bold">#{{ complaint.complaint_id }}</span>
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider 
+                        {% if complaint.priority == 'High' %}bg-rose-500/20 text-rose-400 border border-rose-500/30
+                        {% elif complaint.priority == 'Medium' %}bg-amber-500/20 text-amber-400 border border-amber-500/30
+                        {% else %}bg-sky-500/20 text-sky-400 border border-sky-500/30{% endif %}">
+                        {{ complaint.priority }} Priority
+                    </span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-display-lg font-bold text-white">{{ complaint.title }}</h1>
+                <p class="text-slate-400 text-sm mt-1">Submitted on {{ complaint.date_submitted|date:"F d, Y @ h:i A" }} by {{ complaint.name }}</p>
+            </div>
+            <div>
+                <span class="px-4 py-2 rounded-lg font-bold uppercase tracking-wide text-sm flex items-center gap-2 
+                    {% if complaint.status == 'Pending' %}bg-amber-500/20 text-amber-400 border border-amber-500/30
+                    {% elif complaint.status == 'Assigned' %}bg-sky-500/20 text-sky-400 border border-sky-500/30
+                    {% elif complaint.status == 'Under Investigation' %}bg-indigo-500/20 text-indigo-400 border border-indigo-500/30
+                    {% elif complaint.status == 'Evidence Review' %}bg-purple-500/20 text-purple-400 border border-purple-500/30
+                    {% elif complaint.status == 'Resolved' %}bg-emerald-500/20 text-emerald-400 border border-emerald-500/30
+                    {% else %}bg-slate-500/20 text-slate-400 border border-slate-500/30{% endif %}">
+                    <span class="w-2 h-2 rounded-full 
+                        {% if complaint.status == 'Pending' %}bg-amber-400 animate-pulse
+                        {% elif complaint.status == 'Assigned' %}bg-sky-400
+                        {% elif complaint.status == 'Under Investigation' %}bg-indigo-400 animate-pulse
+                        {% elif complaint.status == 'Evidence Review' %}bg-purple-400
+                        {% elif complaint.status == 'Resolved' %}bg-emerald-400
+                        {% else %}bg-slate-400{% endif %}"></span>
+                    {{ complaint.status }}
+                </span>
+            </div>
+        </div>
+
+        <!-- Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Side: Case Details & Notes -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Details Card -->
+                <div class="bg-surface-container-lowest border border-outline-variant p-6 md:p-8 rounded-2xl shadow-sm">
+                    <h2 class="font-headline-md font-bold mb-4 text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">description</span>
+                        Incident Details
+                    </h2>
+                    <hr class="border-outline-variant mb-6"/>
+                    <div class="space-y-6">
+                        <div>
+                            <h4 class="text-xs font-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Category / Case Type</h4>
+                            <p class="text-on-surface font-semibold">{{ complaint.case_type.name|default:complaint.category }}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Incident Location / IP / URL</h4>
+                            <p class="text-on-surface font-mono-data bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant w-fit text-sm">{{ complaint.location }}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Description of Incident</h4>
+                            <p class="text-on-surface leading-relaxed whitespace-pre-line text-sm">{{ complaint.description }}</p>
+                        </div>
+                        <div>
+                            <h4 class="text-xs font-label-caps text-on-surface-variant mb-2 uppercase tracking-wider">Digital Evidence</h4>
+                            {% if complaint.evidence %}
+                                <a href="{{ complaint.evidence.url }}" download class="flex items-center gap-3 p-4 bg-surface-container-low rounded-xl border border-outline-variant text-sm text-primary hover:bg-primary/5 transition-all no-underline w-fit">
+                                    <span class="material-symbols-outlined text-2xl">download_for_offline</span>
+                                    <div>
+                                        <p class="font-bold text-on-surface truncate max-w-xs">{{ complaint.evidence.name }}</p>
+                                        <p class="text-xs text-on-surface-variant">Click to download evidence file</p>
+                                    </div>
+                                </a>
+                            {% else %}
+                                <p class="text-on-surface-variant italic text-sm">No evidence attached.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Investigation Progress & Notes Card -->
+                <div class="bg-surface-container-lowest border border-outline-variant p-6 md:p-8 rounded-2xl shadow-sm">
+                    <h2 class="font-headline-md font-bold mb-4 text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary">analytics</span>
+                        Investigation Log
+                    </h2>
+                    <hr class="border-outline-variant mb-6"/>
+                    
+                    {% if complaint.investigation_notes %}
+                        <div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant max-h-96 overflow-y-auto font-mono-data text-xs text-on-surface-variant whitespace-pre-wrap">
+                            {{ complaint.investigation_notes }}
+                        </div>
+                    {% else %}
+                        <p class="text-on-surface-variant italic text-sm">No updates logged by the investigator yet.</p>
+                    {% endif %}
+
+                    {% if complaint.investigation_report %}
+                        <div class="mt-6 pt-6 border-t border-outline-variant">
+                            <h4 class="text-xs font-label-caps text-on-surface-variant mb-2 uppercase tracking-wider">Investigation Report</h4>
+                            <a href="{{ complaint.investigation_report.url }}" download class="flex items-center gap-3 p-4 bg-success/5 rounded-xl border border-success/20 text-sm text-success hover:bg-success/10 transition-all no-underline w-fit">
+                                <span class="material-symbols-outlined text-2xl">description</span>
+                                <div>
+                                    <p class="font-bold text-on-surface truncate max-w-xs">Download Report File</p>
+                                    <p class="text-xs text-on-surface-variant">Formal investigation documentation uploaded by officer.</p>
+                                </div>
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Side: Officer & Timeline -->
+            <div class="space-y-8">
+                <!-- Assigned Officer Card -->
+                <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-sm font-label-caps text-on-surface-variant uppercase tracking-wider mb-4">Investigating Officer</h3>
+                    {% if complaint.assigned_officer %}
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined text-2xl">shield_person</span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-on-surface text-base">{{ complaint.assigned_officer.full_name }}</h4>
+                                <p class="text-xs text-on-surface-variant">{{ complaint.assigned_officer.rank }} - {{ complaint.assigned_officer.department }}</p>
+                                <p class="text-xs text-primary font-bold mt-1">{{ complaint.assigned_officer.specialization }} Specialist</p>
+                            </div>
+                        </div>
+                        {% if is_admin or is_assigned_officer %}
+                            <div class="mt-4 pt-4 border-t border-outline-variant text-xs text-on-surface-variant space-y-1">
+                                <p><strong>Officer ID:</strong> {{ complaint.assigned_officer.officer_id }}</p>
+                                <p><strong>Contact:</strong> {{ complaint.assigned_officer.contact_details }}</p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="flex items-center gap-4 text-amber-500">
+                            <span class="material-symbols-outlined text-3xl">gavel</span>
+                            <div>
+                                <h4 class="font-bold text-base">Unassigned Case</h4>
+                                <p class="text-xs text-on-surface-variant">Awaiting officer allocation.</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Case Timeline Widget -->
+                <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm">
+                    <h3 class="text-sm font-label-caps text-on-surface-variant uppercase tracking-wider mb-6">Status Progression</h3>
+                    
+                    <div class="relative pl-6 border-l-2 border-outline-variant space-y-8 text-sm">
+                        <!-- Node 1: Submitted -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full border-2 border-primary bg-primary flex items-center justify-center text-white">
+                                <span class="w-1.5 h-1.5 bg-white rounded-full"></span>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-on-surface">Submitted</h4>
+                                <p class="text-xs text-on-surface-variant">{{ complaint.date_submitted|date:"M d, Y" }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Node 2: Assigned -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full border-2 
+                                {% if complaint.status != 'Pending' %}border-primary bg-primary{% else %}border-outline-variant bg-surface{% endif %}">
+                            </div>
+                            <div class="{% if complaint.status == 'Pending' %}opacity-55{% endif %}">
+                                <h4 class="font-bold text-on-surface">Officer Assigned</h4>
+                                <p class="text-xs text-on-surface-variant">
+                                    {% if complaint.assigned_officer %}
+                                        Assigned to {{ complaint.assigned_officer.full_name }}
+                                    {% else %}
+                                        Triage Pending
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Node 3: Under Investigation -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full border-2 
+                                {% if complaint.status == 'Under Investigation' or complaint.status == 'Evidence Review' or complaint.status == 'Resolved' or complaint.status == 'Closed' %}border-primary bg-primary{% else %}border-outline-variant bg-surface{% endif %}">
+                            </div>
+                            <div class="{% if complaint.status == 'Pending' or complaint.status == 'Assigned' %}opacity-55{% endif %}">
+                                <h4 class="font-bold text-on-surface">Under Investigation</h4>
+                                <p class="text-xs text-on-surface-variant">Active investigation details logged</p>
+                            </div>
+                        </div>
+
+                        <!-- Node 4: Resolved -->
+                        <div class="relative">
+                            <div class="absolute -left-[31px] top-0 w-4 h-4 rounded-full border-2 
+                                {% if complaint.status == 'Resolved' or complaint.status == 'Closed' %}border-success bg-success{% else %}border-outline-variant bg-surface{% endif %}">
+                            </div>
+                            <div class="{% if complaint.status != 'Resolved' and complaint.status != 'Closed' %}opacity-55{% endif %}">
+                                <h4 class="font-bold text-on-surface">Resolved</h4>
+                                <p class="text-xs text-on-surface-variant">Case fully closed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reassignment History Card -->
+                {% if histories %}
+                    <div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-2xl shadow-sm">
+                        <h3 class="text-sm font-label-caps text-on-surface-variant uppercase tracking-wider mb-4">Allocation Logs</h3>
+                        <div class="space-y-4 max-h-64 overflow-y-auto">
+                            {% for history in histories %}
+                                <div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="font-bold text-primary">{{ history.new_officer.full_name|default:"Unassigned" }}</span>
+                                        <span class="text-on-surface-variant text-[10px]">{{ history.date|date:"M d, Y" }}</span>
+                                    </div>
+                                    <p class="text-[11px] text-on-surface-variant mb-1"><strong>Previous:</strong> {{ history.previous_officer.full_name|default:"None" }}</p>
+                                    <p class="text-[11px] text-on-surface-variant"><strong>Reason:</strong> {{ history.reason }}</p>
+                                    <p class="text-[10px] text-outline text-right mt-1">By: {{ history.changed_by_admin.username }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
