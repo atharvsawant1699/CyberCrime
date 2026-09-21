@@ -97,15 +97,24 @@ WSGI_APPLICATION = 'CyberCrime.wsgi.application'
 DATABASE_URL = os.getenv('DATABASE_URL')
 DB_HOST = os.getenv('DB_HOST')
 
-if DATABASE_URL:
+if DATABASE_URL and DATABASE_URL.strip():
     import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+    try:
+        DATABASES = {
+            'default': dj_database_url.parse(
+                DATABASE_URL.strip(),
+                conn_max_age=600,
+                conn_health_checks=True,
+            )
+        }
+    except Exception as err:
+        print(f"Warning: Unable to parse DATABASE_URL ({err}). Falling back to SQLite.")
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 elif DB_HOST:
     DATABASES = {
         'default': {
