@@ -32,9 +32,13 @@ def officer_required(view_func):
             return redirect('admin_dashboard')
             
         has_profile = Officer.objects.filter(user=request.user).exists()
-        is_officer = has_profile or request.user.groups.filter(name='Officers').exists()
+        if not has_profile and request.user.email:
+            has_profile = Officer.objects.filter(email=request.user.email).exists()
+            
+        is_officer = has_profile or request.user.groups.filter(name='Officers').exists() or request.user.is_staff
         if not is_officer:
-            raise PermissionDenied
+            messages.error(request, 'Access denied. You do not have officer permissions.')
+            return redirect('home')
         return view_func(request, *args, **kwargs)
     return wrapped_view
 

@@ -42,10 +42,6 @@ class Officer(models.Model):
         elif self.rank and not self.designation:
             self.designation = self.rank
 
-        # Sync availability_status and active_status
-        if self.active_status != self.availability_status:
-            self.availability_status = self.active_status
-
         # Sync created_at and created_date
         if self.created_at and not self.created_date:
             self.created_date = self.created_at

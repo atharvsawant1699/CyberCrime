@@ -52,15 +52,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-on-surface mb-2" for="first_name">First Name</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">person</span>
+                            <div class="relative flex items-center">
+                                <i class="fa-solid fa-user absolute left-3.5 text-outline text-[14px]"></i>
                                 <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="first_name" name="first_name" placeholder="John" required="" type="text"/>
                             </div>
                         </div>
                         <div class="relative">
                             <label class="block text-sm font-semibold text-on-surface mb-2" for="last_name">Last Name</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">person</span>
+                            <div class="relative flex items-center">
+                                <i class="fa-solid fa-user absolute left-3.5 text-outline text-[14px]"></i>
                                 <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="last_name" name="last_name" placeholder="Doe" required="" type="text"/>
                             </div>
                         </div>
@@ -69,24 +69,24 @@
                     <!-- Username -->
                     <div class="relative">
                         <label class="block text-sm font-semibold text-on-surface mb-2" for="username">Username</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">person</span>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-user-gear absolute left-3.5 text-outline text-[14px]"></i>
                             <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="username" name="username" placeholder="johndoe_secure" required="" type="text"/>
                         </div>
                     </div>
                     <!-- Email -->
                     <div class="relative">
                         <label class="block text-sm font-semibold text-on-surface mb-2" for="email">Email Address</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">mail</span>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-envelope absolute left-3.5 text-outline text-[14px]"></i>
                             <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="email" name="email" placeholder="john@organization.com" required="" type="email"/>
                         </div>
                     </div>
                     <!-- Phone -->
                     <div class="relative">
                         <label class="block text-sm font-semibold text-on-surface mb-2" for="phone_number">Phone Number</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">call</span>
+                        <div class="relative flex items-center">
+                            <i class="fa-solid fa-phone absolute left-3.5 text-outline text-[14px]"></i>
                             <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="phone_number" name="phone_number" placeholder="+1 (555) 000-0000" required="" type="tel"/>
                         </div>
                     </div>
@@ -94,8 +94,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="relative">
                             <label class="block text-sm font-semibold text-on-surface mb-2" for="password">Password</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">lock</span>
+                            <div class="relative flex items-center">
+                                <i class="fa-solid fa-lock absolute left-3.5 text-outline text-[14px]"></i>
                                 <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="password" name="password" oninput="checkPasswordStrength(this.value)" required="" type="password"/>
                             </div>
                             <!-- Strength Indicator -->
@@ -106,8 +106,8 @@
                         </div>
                         <div class="relative">
                             <label class="block text-sm font-semibold text-on-surface mb-2" for="confirm_password">Confirm Password</label>
-                            <div class="relative">
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">lock_reset</span>
+                            <div class="relative flex items-center">
+                                <i class="fa-solid fa-shield-halved absolute left-3.5 text-outline text-[14px]"></i>
                                 <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all text-on-surface" id="confirm_password" name="confirm_password" required="" type="password"/>
                             </div>
                             <p class="text-[10px] mt-1 font-semibold text-error hidden" id="match-error">Passwords do not match</p>

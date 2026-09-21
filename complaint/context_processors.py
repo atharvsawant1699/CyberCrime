@@ -7,11 +7,13 @@ def officer_status(request):
     if not request.user.is_authenticated:
         return {'is_officer': False, 'is_admin': False}
     
-    # Superusers are strictly administrators, NOT officers
-    is_admin = request.user.is_superuser
+    is_admin = request.user.is_superuser or request.user.is_staff
     
     has_profile = Officer.objects.filter(user=request.user).exists()
-    is_officer = (not is_admin) and (has_profile or request.user.groups.filter(name='Officers').exists())
+    if not has_profile and request.user.email:
+        has_profile = Officer.objects.filter(email=request.user.email).exists()
+        
+    is_officer = has_profile or request.user.groups.filter(name='Officers').exists() or request.user.is_staff or request.user.is_superuser
     
     return {
         'is_officer': is_officer,

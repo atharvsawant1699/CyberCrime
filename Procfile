@@ -1,1 +1,1 @@
-web: gunicorn CyberCrime.wsgi
+web: gunicorn CyberCrime.wsgi:application

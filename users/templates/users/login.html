@@ -18,7 +18,7 @@
             <!-- Icon and Title -->
             <div class="flex flex-col items-center mb-8">
                 <div class="w-16 h-16 bg-primary-container flex items-center justify-center rounded-full mb-4">
-                    <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+                    <i class="fa-solid fa-lock text-primary text-3xl"></i>
                 </div>
                 <h1 class="font-headline-md text-[24px] font-bold text-on-surface">{{ SOFTWARE_NAME }} Login</h1>
                 <p class="font-body-base text-body-base text-on-surface-variant text-center mt-2">
@@ -28,7 +28,7 @@
 
             <!-- Security Warning -->
             <div class="mb-6 p-4 bg-error-container/30 border border-error/20 rounded-lg text-on-error-container text-[13px] flex gap-3">
-                <span class="material-symbols-outlined text-[20px] text-error shrink-0" style="font-variation-settings: 'FILL' 1;">warning</span>
+                <i class="fa-solid fa-triangle-exclamation text-[18px] text-error shrink-0 mt-0.5"></i>
                 <p class="leading-relaxed font-body-base">
                     <strong>SECURITY WARNING:</strong> This system is intended for authorized use only. Unauthorized access, modification, or misuse is strictly prohibited and subject to monitoring and prosecution under applicable laws.
                 </p>
@@ -37,13 +37,14 @@
             <!-- Login Form -->
             <form action="{% url 'login' %}" class="space-y-6" method="post">
                 {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next|default:'' }}"/>
                 
                 <!-- Username Field -->
                 <div class="space-y-2">
-                    <label class="font-label-caps text-label-caps text-on-surface-variant" for="id_username">Username</label>
-                    <div class="relative">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="person">person</span>
-                        <input class="w-full pl-12 pr-4 py-3 bg-surface-container border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_username" name="username" placeholder="Enter username" required="" type="text"/>
+                    <label class="font-label-caps text-label-caps text-on-surface-variant" for="id_username">Username or Email</label>
+                    <div class="relative flex items-center">
+                        <i class="fa-solid fa-user absolute left-4 text-on-surface-variant text-[16px]"></i>
+                        <input class="w-full pl-11 pr-4 py-3 bg-surface-container border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_username" name="username" placeholder="Enter username or email" required="" type="text"/>
                     </div>
                 </div>
                 <!-- Password Field -->
@@ -52,11 +53,11 @@
                         <label class="font-label-caps text-label-caps text-on-surface-variant" for="id_password">Access Password</label>
                         <a class="font-label-caps text-label-caps text-primary hover:underline no-underline" href="{% url 'password_reset' %}">Forgot password?</a>
                     </div>
-                    <div class="relative" x-data="{ show: false }">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-on-surface-variant text-[20px]" data-icon="key">key</span>
-                        <input :type="show ? 'text' : 'password'" class="w-full pl-12 pr-12 py-3 bg-surface-container border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_password" name="password" placeholder="••••••••••••" required=""/>
-                        <button @click="show = !show" class="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors" type="button">
-                            <span class="material-symbols-outlined text-[20px]" x-text="show ? 'visibility_off' : 'visibility'">visibility</span>
+                    <div class="relative flex items-center" x-data="{ show: false }">
+                        <i class="fa-solid fa-key absolute left-4 text-on-surface-variant text-[16px]"></i>
+                        <input :type="show ? 'text' : 'password'" class="w-full pl-11 pr-12 py-3 bg-surface-container border border-outline-variant rounded-lg font-body-base text-body-base focus:ring-4 focus:ring-primary/20 focus:border-primary outline-none transition-all" id="id_password" name="password" placeholder="••••••••••••" required=""/>
+                        <button @click="show = !show" class="absolute right-4 text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center" type="button">
+                            <i class="fa-solid text-[16px]" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
                         </button>
                     </div>
                 </div>
@@ -70,7 +71,7 @@
                 <!-- Action Button -->
                 <button class="w-full bg-primary text-on-primary py-4 rounded-lg font-headline-md text-body-base hover:opacity-90 transition-all active:scale-[0.98] shadow-lg shadow-primary/10 flex items-center justify-center gap-2" type="submit">
                     <span>Authorize Access</span>
-                    <span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+                    <i class="fa-solid fa-arrow-right text-[16px]"></i>
                 </button>
             </form>
             <!-- Footer Link -->
@@ -88,11 +89,11 @@
         <!-- Trust Badges -->
         <div class="mt-8 flex justify-center items-center gap-6 opacity-60 text-outline">
             <div class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-xl" data-icon="verified_user">verified_user</span>
+                <i class="fa-solid fa-shield-halved text-lg"></i>
                 <span class="text-label-caps font-label-caps">256-BIT ENCRYPTION</span>
             </div>
             <div class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-xl" data-icon="gpp_good">gpp_good</span>
+                <i class="fa-solid fa-user-shield text-lg"></i>
                 <span class="text-label-caps font-label-caps">SOC2 COMPLIANT</span>
             </div>
         </div>
