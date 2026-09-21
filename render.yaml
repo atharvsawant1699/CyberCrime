@@ -6,7 +6,7 @@ services:
     startCommand: gunicorn CyberCrime.wsgi:application
     envVars:
       - key: PYTHON_VERSION
-        value: 3.11.9
+        value: 3.12.3
       - key: DEBUG
         value: "False"
       - key: SECRET_KEY
